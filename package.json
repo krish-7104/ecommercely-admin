@@ -13,6 +13,7 @@
     "@prisma/client": "^5.1.1",
     "@radix-ui/react-label": "^2.0.2",
     "@radix-ui/react-slot": "^1.0.2",
+    "@radix-ui/react-toast": "^1.1.4",
     "@types/react": "18.2.20",
     "@types/react-dom": "18.2.7",
     "autoprefixer": "10.4.15",
@@ -21,6 +22,7 @@
     "clsx": "^2.0.0",
     "eslint": "8.47.0",
     "eslint-config-next": "13.4.16",
+    "jsonwebtoken": "^9.0.1",
     "lucide-react": "^0.268.0",
     "next": "13.4.16",
     "postcss": "8.4.28",
@@ -33,6 +35,7 @@
     "zod": "^3.22.1"
   },
   "devDependencies": {
+    "@types/jsonwebtoken": "^9.0.2",
     "@types/node": "^20.5.0",
     "prisma": "^5.1.1",
     "ts-node": "^10.9.1",

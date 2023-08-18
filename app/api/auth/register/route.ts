@@ -4,12 +4,12 @@ const prisma = new PrismaClient();
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const { email, password } = body;
+    const { email, password, name } = body;
     const newUser = await prisma.adminUser.create({
       data: {
         email,
         password,
-        name: "Krish",
+        name,
       },
     });
     return NextResponse.json(newUser);

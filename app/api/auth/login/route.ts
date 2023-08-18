@@ -1,0 +1,41 @@
+import { PrismaClient } from "@prisma/client";
+import { NextResponse } from "next/server";
+import jwt from "jsonwebtoken";
+
+const prisma = new PrismaClient();
+
+export async function POST(req: Request) {
+  try {
+    const body = await req.json();
+    const { email, password, action } = body;
+
+    const user = await prisma.adminUser.findUnique({
+      where: { email },
+    });
+
+    if (!user || user.password !== password) {
+      return new NextResponse("Invalid credentials", { status: 401 });
+    }
+
+    // Generate a token
+    const token = jwt.sign({ userId: user.id }, process.env.SECRET_KEY, {
+      expiresIn: "2h",
+    });
+
+    // Construct the response
+    const response = new NextResponse(
+      JSON.stringify({ message: "Successfully logged in" })
+    );
+
+    // Set the cookie in the response headers
+    response.headers.set(
+      "Set-Cookie",
+      `token=${token}; HttpOnly; Path=/; Max-Age=7200`
+    );
+
+    return response;
+  } catch (error) {
+    console.log(error);
+    return new NextResponse("Internal Error", { status: 500 });
+  }
+}

@@ -15,7 +15,10 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import axios from "axios";
+import { useToast } from "@/components/ui/use-toast";
 const Login = () => {
+  const { toast } = useToast();
+
   const formSchema = z.object({
     email: z.string().nonempty(),
     password: z.string().nonempty(),
@@ -29,9 +32,14 @@ const Login = () => {
   });
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-      const resp = await axios.post("/api/login", values);
-      console.log(resp.data);
+      const resp = await axios.post("/api/auth/login", values);
+      toast({
+        description: "Login Successfull",
+      });
     } catch (error) {
+      toast({
+        description: "Error Occured!",
+      });
       console.log(error);
     }
   };
