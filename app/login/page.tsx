@@ -14,6 +14,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import axios from "axios";
 const Login = () => {
   const formSchema = z.object({
     email: z.string().nonempty(),
@@ -26,11 +27,14 @@ const Login = () => {
       password: "",
     },
   });
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    console.log(values);
-  }
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    try {
+      const resp = await axios.post("/api/login", values);
+      console.log(resp.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
     <section className="relative bg-[#e7e6e6] flex justify-center items-center h-[100vh] w-full">
       <div className="w-[35%] bg-white shadow-md px-7 py-5">
