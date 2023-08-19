@@ -17,21 +17,19 @@ export async function POST(req: Request) {
       return new NextResponse("Invalid credentials", { status: 401 });
     }
 
-    // Generate a token
     const token = jwt.sign({ userId: user.id }, process.env.SECRET_KEY, {
       expiresIn: "2h",
     });
 
-    // Construct the response
     const response = new NextResponse(
       JSON.stringify({ message: "Successfully logged in" })
     );
 
-    // Set the cookie in the response headers
     response.headers.set(
       "Set-Cookie",
-      `token=${token}; HttpOnly; Path=/; Max-Age=7200`
+      `token=${token}; HttpOnly; Path=/; Max-Age=86400`
     );
+    // cookie will set for 1 day
 
     return response;
   } catch (error) {
