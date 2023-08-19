@@ -1,3 +1,4 @@
+import { Toaster } from "@/components/ui/toaster";
 import "./globals.css";
 import type { Metadata } from "next";
 import { Montserrat } from "next/font/google";
@@ -16,7 +17,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={montserrat.className}>{children}</body>
+      <body className={montserrat.className}>
+        {children} <Toaster />
+      </body>
     </html>
   );
 }

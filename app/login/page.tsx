@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -7,7 +7,6 @@ import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -16,9 +15,11 @@ import {
 import { Input } from "@/components/ui/input";
 import axios from "axios";
 import { useToast } from "@/components/ui/use-toast";
+import { useRouter } from "next/navigation";
+
 const Login = () => {
   const { toast } = useToast();
-
+  const router = useRouter();
   const formSchema = z.object({
     email: z.string().nonempty(),
     password: z.string().nonempty(),
@@ -36,11 +37,13 @@ const Login = () => {
       toast({
         description: "Login Successfull",
       });
-    } catch (error) {
+      router.replace("/");
+    } catch (error: any) {
       toast({
-        description: "Error Occured!",
+        variant: "destructive",
+        title: "Uh oh! Something went wrong.",
+        description: error.response.data,
       });
-      console.log(error);
     }
   };
   return (
