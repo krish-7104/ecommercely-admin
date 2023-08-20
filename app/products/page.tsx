@@ -6,6 +6,7 @@ import { DataTable } from "./data-table";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { toast } from "react-hot-toast";
 
 const Product = () => {
   const navigate = useRouter();
@@ -13,13 +14,17 @@ const Product = () => {
   const [dataFetched, setDataFetched] = useState(false);
 
   const getData = async (): Promise<void> => {
+    toast.loading("Loading Data");
     try {
       const resp = await axios.post("/api/product/getproducts");
       setData(resp.data);
       setDataFetched(true);
+      toast.dismiss();
     } catch (error: any) {
       setData([]);
       setDataFetched(true);
+      toast.dismiss();
+      toast.error("Something Went Wrong!");
     }
   };
 
@@ -27,7 +32,7 @@ const Product = () => {
     if (!dataFetched) {
       getData();
     }
-  }, []);
+  }, [dataFetched]);
 
   return (
     <div className="container mx-auto py-10">

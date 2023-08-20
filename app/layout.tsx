@@ -1,11 +1,10 @@
 "use client";
-import { Toaster } from "@/components/ui/toaster";
 import "./globals.css";
 import type { Metadata } from "next";
 import { Montserrat } from "next/font/google";
 import Navbar from "@/components/navbar";
 import { usePathname } from "next/navigation";
-
+import { Toaster } from "react-hot-toast";
 const montserrat = Montserrat({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -24,7 +23,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={montserrat.className}>
         {!isLoginPage && <Navbar />}
-        {children} <Toaster />
+        {children} <Toaster position="bottom-right" />
       </body>
     </html>
   );
