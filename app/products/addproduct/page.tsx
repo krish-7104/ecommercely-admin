@@ -13,11 +13,10 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import axios from "axios";
-import { useToast } from "@/components/ui/use-toast";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
+import toast from "react-hot-toast";
 const AddProduct = () => {
-  const { toast } = useToast();
   const router = useRouter();
   const formSchema = z.object({
     product_name: z.string().nonempty(),
@@ -35,19 +34,14 @@ const AddProduct = () => {
     },
   });
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    console.log(values);
+    toast.loading("Adding Product..");
     try {
       const resp = await axios.post("/api/product/addproduct", values);
-      toast({
-        description: "Register Successfull",
-      });
-      router.replace("/");
+      toast.dismiss();
+      toast.success("Product Added");
     } catch (error: any) {
-      toast({
-        variant: "destructive",
-        title: "Uh oh! Something went wrong.",
-        description: error.response.data,
-      });
+      toast.dismiss();
+      toast.error("Something Went Wrong!");
     }
   };
   return (

@@ -6,7 +6,7 @@ export async function GET(
   context: { params: { productId: string } }
 ) {
   try {
-    const product = await prismadb.products.findUnique({
+    const product = await prismadb.product.findUnique({
       where: { id: context.params.productId },
     });
 
