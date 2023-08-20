@@ -1,15 +1,13 @@
-import { PrismaClient } from "@prisma/client";
 import { NextResponse } from "next/server";
 import jwt from "jsonwebtoken";
-
-const prisma = new PrismaClient();
+import prismadb from "@/lib/prismadb";
 
 export async function POST(req: Request) {
   try {
     const body = await req.json();
     const { email, password, action } = body;
 
-    const user = await prisma.adminUser.findUnique({
+    const user = await prismadb.adminUser.findUnique({
       where: { email },
     });
 
