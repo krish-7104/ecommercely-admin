@@ -27,7 +27,7 @@ export const config = {
     "/products",
     "/orders",
     "/users",
-    "/settings",
+    // "/settings",
     "/products/addproduct",
   ],
 };

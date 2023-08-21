@@ -23,7 +23,8 @@ export default function RootLayout({
     <html lang="en">
       <body className={montserrat.className}>
         {!isLoginPage && <Navbar />}
-        {children} <Toaster position="bottom-right" />
+        {children}
+        <Toaster position="bottom-right" />
       </body>
     </html>
   );

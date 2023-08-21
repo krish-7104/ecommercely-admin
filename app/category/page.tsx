@@ -36,6 +36,11 @@ const Product = () => {
 
   return (
     <div className="container mx-auto py-10">
+      <div className="flex justify-end items-center mb-4">
+        <Button onClick={() => navigate.push("/products/addproduct")}>
+          Add Product <Plus className="h-4 w-4 ml-2" />
+        </Button>
+      </div>
       <DataTable columns={columns} data={data} />
     </div>
   );

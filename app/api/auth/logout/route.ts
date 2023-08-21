@@ -1,5 +1,4 @@
 import { NextResponse } from "next/server";
-import jwt from "jsonwebtoken";
 
 export async function GET(req: Request) {
   try {
@@ -7,7 +6,7 @@ export async function GET(req: Request) {
       message: "Logout successful",
       success: true,
     });
-    response.cookies.set("token", "", {
+    response.cookies.set("adminToken", "", {
       httpOnly: true,
       expires: new Date(0),
     });

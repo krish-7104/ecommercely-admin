@@ -14,11 +14,9 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import axios from "axios";
-import { useToast } from "@/components/ui/use-toast";
 import { useRouter } from "next/navigation";
-
+import toast from "react-hot-toast";
 const Login = () => {
-  const { toast } = useToast();
   const router = useRouter();
   const formSchema = z.object({
     email: z.string().nonempty(),
@@ -32,22 +30,19 @@ const Login = () => {
     },
   });
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    toast.loading("Logging In...");
     try {
       const resp = await axios.post("/api/auth/login", values);
-      toast({
-        description: "Login Successfull",
-      });
+      toast.dismiss();
       router.replace("/");
+      toast.success("Login Successfull");
     } catch (error: any) {
-      toast({
-        variant: "destructive",
-        title: "Uh oh! Something went wrong.",
-        description: error.response.data,
-      });
+      toast.dismiss();
+      toast.error("Uh oh! Something went wrong.");
     }
   };
   return (
-    <section className="relative bg-[#e7e6e6] flex justify-center items-center h-[100vh] w-full">
+    <section className="relative bg-[#f6f9fc] flex justify-center items-center h-[100vh] w-full">
       <div className="w-[35%] bg-white shadow-md px-7 py-5">
         <p className="text-xl font-semibold text-center mb-6">
           Login - Admin Panel

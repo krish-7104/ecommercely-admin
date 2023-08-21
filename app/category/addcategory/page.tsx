@@ -86,7 +86,7 @@ const AddProduct = () => {
   };
 
   return (
-    <section className="relative flex justify-center items-center w-full mt-6">
+    <section className="relative bg-[#f6f9fc] flex justify-center items-center w-full mt-6">
       <div className="w-[35%] py-5">
         <p className="text-xl font-semibold text-center mb-6">
           Add New Product
