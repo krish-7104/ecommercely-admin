@@ -11,6 +11,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Switch } from "@/components/ui/switch";
 
 export type Products = {
   id: string;
@@ -18,6 +19,8 @@ export type Products = {
   price: Number;
   quantity: Number;
   category: String;
+  visible: Boolean;
+  featured: Boolean;
 };
 
 export const columns: ColumnDef<Products>[] = [
@@ -62,6 +65,48 @@ export const columns: ColumnDef<Products>[] = [
         </Button>
       );
     },
+  },
+  {
+    accessorKey: "visible",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Published
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
+    cell: ({ row }) => (
+      <Switch
+        checked={Boolean(row.original.visible)}
+        onCheckedChange={(value) => row.toggleSelected(!!value)}
+        aria-label="Select row"
+      />
+    ),
+  },
+  {
+    accessorKey: "featured",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Featured
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
+    cell: ({ row }) => (
+      <Switch
+        checked={Boolean(row.original.featured)}
+        onCheckedChange={(value) => row.toggleSelected(!!value)}
+        aria-label="Select row"
+      />
+    ),
   },
   {
     accessorKey: "Category.name",
