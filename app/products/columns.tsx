@@ -12,6 +12,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Switch } from "@/components/ui/switch";
+import { toast } from "react-hot-toast";
+import axios from "axios";
 
 export type Products = {
   id: string;
@@ -21,6 +23,21 @@ export type Products = {
   category: String;
   visible: Boolean;
   featured: Boolean;
+};
+
+const updateData = async (id: String, type: String, value: Boolean) => {
+  toast.loading("Uploading Data");
+  try {
+    const resp = await axios.put("/api/product/updateproduct", {
+      id,
+      [type]: value,
+    });
+
+    toast.dismiss();
+  } catch (error: any) {
+    toast.dismiss();
+    toast.error("Something Went Wrong!");
+  }
 };
 
 export const columns: ColumnDef<Products>[] = [
@@ -82,7 +99,9 @@ export const columns: ColumnDef<Products>[] = [
     cell: ({ row }) => (
       <Switch
         checked={Boolean(row.original.visible)}
-        onCheckedChange={(value) => row.toggleSelected(!!value)}
+        onCheckedChange={(value) =>
+          updateData(row.original.id, "visible", value)
+        }
         aria-label="Select row"
       />
     ),
@@ -103,7 +122,9 @@ export const columns: ColumnDef<Products>[] = [
     cell: ({ row }) => (
       <Switch
         checked={Boolean(row.original.featured)}
-        onCheckedChange={(value) => row.toggleSelected(!!value)}
+        onCheckedChange={(value) =>
+          updateData(row.original.id, "featured", value)
+        }
         aria-label="Select row"
       />
     ),
@@ -126,7 +147,6 @@ export const columns: ColumnDef<Products>[] = [
     id: "actions",
     cell: ({ row }) => {
       const payment = row.original;
-
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>

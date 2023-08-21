@@ -33,7 +33,6 @@ import {
 
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
-import { Switch } from "@/components/ui/switch";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
