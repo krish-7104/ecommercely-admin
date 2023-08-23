@@ -21,7 +21,6 @@ import {
   MenubarItem,
   MenubarMenu,
   MenubarSeparator,
-  MenubarShortcut,
   MenubarTrigger,
 } from "@/components/ui/menubar";
 import { useRouter } from "next/navigation";
@@ -74,7 +73,7 @@ const Navbar = () => {
                 </MenubarItem>
                 <MenubarSeparator />
                 <MenubarItem
-                  onClick={() => router.push("/categorys/addcategory")}
+                  onClick={() => router.push("/category/addcategory")}
                 >
                   Add Category
                 </MenubarItem>
@@ -99,7 +98,7 @@ const Navbar = () => {
                 </MenubarItem>
                 <MenubarSeparator />
                 <MenubarItem
-                  onClick={() => router.push("/categorys/addcategory")}
+                  onClick={() => router.push("/category/addcategory")}
                 >
                   Add Admin
                 </MenubarItem>

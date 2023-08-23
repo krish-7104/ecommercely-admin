@@ -14,6 +14,7 @@ import {
 import { Switch } from "@/components/ui/switch";
 import { toast } from "react-hot-toast";
 import axios from "axios";
+let refreshTableCallback: (() => void) | null = null;
 
 export type Products = {
   id: string;
@@ -25,14 +26,16 @@ export type Products = {
   featured: Boolean;
 };
 
-const updateData = async (id: String, type: String, value: Boolean) => {
+const updateData = async (id: String, type: any, value: Boolean) => {
   toast.loading("Uploading Data");
   try {
     const resp = await axios.put("/api/product/updateproduct", {
       id,
       [type]: value,
     });
-
+    if (refreshTableCallback) {
+      refreshTableCallback();
+    }
     toast.dismiss();
   } catch (error: any) {
     toast.dismiss();
@@ -172,3 +175,8 @@ export const columns: ColumnDef<Products>[] = [
     },
   },
 ];
+
+export function setRefreshTableCallback(callback: () => void) {
+  refreshTableCallback = callback;
+  console.log("Hey");
+}

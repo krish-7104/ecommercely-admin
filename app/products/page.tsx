@@ -3,15 +3,20 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { Products, columns } from "./columns";
 import { DataTable } from "./data-table";
-import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { toast } from "react-hot-toast";
+import { setRefreshTableCallback } from "./columns";
 
 const Product = () => {
   const navigate = useRouter();
   const [data, setData] = useState<Products[]>([]);
   const [dataFetched, setDataFetched] = useState(false);
+  const handleRefreshTable = () => {
+    getData();
+  };
+  useEffect(() => {
+    setRefreshTableCallback(handleRefreshTable);
+  }, []);
 
   const getData = async (): Promise<void> => {
     toast.loading("Loading Data");
