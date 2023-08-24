@@ -12,17 +12,17 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-export type Products = {
-  id: string;
-  product_name: string;
-  price: Number;
-  quantity: Number;
-  category: String;
+type FormateProduct = {
+  name: String;
+  featured: Number;
+  published: Number;
+  totalProduct: Number;
+  stock: Number;
 };
 
-export const columns: ColumnDef<Products>[] = [
+export const columns: ColumnDef<FormateProduct>[] = [
   {
-    accessorKey: "product_name",
+    accessorKey: "name",
     header: ({ column }) => {
       return (
         <Button
@@ -36,42 +36,56 @@ export const columns: ColumnDef<Products>[] = [
     },
   },
   {
-    accessorKey: "price",
+    accessorKey: "totalProduct",
     header: ({ column }) => {
       return (
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Price
+          Products
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       );
     },
   },
   {
-    accessorKey: "quantity",
+    accessorKey: "stock",
     header: ({ column }) => {
       return (
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Quantity
+          Stock
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       );
     },
   },
   {
-    accessorKey: "Category.name",
+    accessorKey: "published",
     header: ({ column }) => {
       return (
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Category
+          Published
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
+  },
+  {
+    accessorKey: "featured",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Featured
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       );
@@ -93,7 +107,7 @@ export const columns: ColumnDef<Products>[] = [
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(payment.id)}
+            // onClick={() => navigator.clipboard.writeText(payment.id)}
             >
               Copy Product ID
             </DropdownMenuItem>
