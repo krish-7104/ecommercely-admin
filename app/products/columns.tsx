@@ -21,12 +21,12 @@ export type Products = {
   product_name: string;
   price: Number;
   quantity: Number;
-  category: String;
+  category: string;
   visible: Boolean;
   featured: Boolean;
 };
 
-const updateData = async (id: String, type: any, value: Boolean) => {
+const updateData = async (id: string, type: any, value: Boolean) => {
   toast.loading("Uploading Data");
   try {
     const resp = await axios.put("/api/product/updateproduct", {
@@ -149,7 +149,7 @@ export const columns: ColumnDef<Products>[] = [
   {
     id: "actions",
     cell: ({ row }) => {
-      const payment = row.original;
+      const productId = row.original.id;
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -161,7 +161,10 @@ export const columns: ColumnDef<Products>[] = [
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(payment.id)}
+              onClick={() => {
+                navigator.clipboard.writeText(productId);
+                toast.success("Product Id Copied");
+              }}
             >
               Copy Product ID
             </DropdownMenuItem>

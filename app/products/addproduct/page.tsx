@@ -47,7 +47,6 @@ const AddProduct = () => {
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     toast.loading("Adding Product..");
     try {
-      // Add the selected categoryId to the values object
       const selectedCategory = categoryData.find(
         (item) => item.id === values.category
       );
@@ -72,7 +71,7 @@ const AddProduct = () => {
   const getCategoryData = async (): Promise<void> => {
     toast.loading("Loading Data");
     try {
-      const resp = await axios.post("/api/category/get");
+      const resp = await axios.post("/api/category/getcategory");
       setCategoryData(resp.data);
       console.log(resp.data);
       setDataFetched(true);

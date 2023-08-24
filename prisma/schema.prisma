@@ -16,6 +16,7 @@ model AdminUser {
   updatedAt DateTime @updatedAt
 }
 
+
 model User {
   id        String   @id @default(uuid())
   name      String
@@ -29,7 +30,7 @@ model User {
   country   String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  carts     Cart[]
+  cart      Cart? 
   orders    Order[]
 }
 
@@ -56,11 +57,11 @@ model Category {
 
 model Cart {
   id        String   @id @default(uuid())
-  userId    String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   products  Json
   user      User     @relation(fields: [userId], references: [id])
+  userId    String   @unique
 }
 
 model Order {

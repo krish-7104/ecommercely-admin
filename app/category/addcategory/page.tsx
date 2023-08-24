@@ -15,47 +15,22 @@ import { Input } from "@/components/ui/input";
 import axios from "axios";
 import { Button } from "@/components/ui/button";
 import toast from "react-hot-toast";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-const AddProduct = () => {
-  const [categoryData, setCategoryData] = useState<
-    Array<{ name: string; id: string }>
-  >([]);
-  const [dataFetched, setDataFetched] = useState<Boolean>(false);
+const AddCategory = () => {
   const formSchema = z.object({
-    product_name: z.string().nonempty(),
-    product_description: z.string().nonempty(),
-    price: z.coerce.number(),
-    quantity: z.coerce.number(),
-    image: z.string().nonempty(),
-    category: z.string().nonempty(),
+    name: z.string().nonempty(),
   });
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      product_name: "",
-      product_description: "",
-      image: "",
-      category: "",
+      name: "",
     },
   });
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    toast.loading("Adding Product..");
+    toast.loading("Adding Category..");
     try {
-      // Add the selected categoryId to the values object
-      const selectedCategory = categoryData.find(
-        (item) => item.id === values.category
-      );
-      values.category = selectedCategory ? selectedCategory.id : "";
-
-      const resp = await axios.post("/api/product/addproduct", values);
+      const resp = await axios.post("/api/category/addcategory", values);
       toast.dismiss();
-      toast.success("Product Added");
+      toast.success("Category Added");
       form.reset();
     } catch (error: any) {
       toast.dismiss();
@@ -63,33 +38,11 @@ const AddProduct = () => {
     }
   };
 
-  useEffect(() => {
-    if (!dataFetched) {
-      getCategoryData();
-    }
-  }, [dataFetched]);
-
-  const getCategoryData = async (): Promise<void> => {
-    toast.loading("Loading Data");
-    try {
-      const resp = await axios.post("/api/category/get");
-      setCategoryData(resp.data);
-      console.log(resp.data);
-      setDataFetched(true);
-      toast.dismiss();
-    } catch (error: any) {
-      setCategoryData([]);
-      setDataFetched(true);
-      toast.dismiss();
-      toast.error("Something Went Wrong!");
-    }
-  };
-
   return (
-    <section className="relative bg-[#f6f9fc] flex justify-center items-center w-full mt-6">
+    <section className="relative flex justify-center items-center w-full mt-6">
       <div className="w-[35%] py-5">
         <p className="text-xl font-semibold text-center mb-6">
-          Add New Product
+          Add New Category
         </p>
         <Form {...form}>
           <form
@@ -98,92 +51,12 @@ const AddProduct = () => {
           >
             <FormField
               control={form.control}
-              name="product_name"
+              name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Product Name</FormLabel>
+                  <FormLabel>Category Name</FormLabel>
                   <FormControl>
                     <Input placeholder="" type="text" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="product_description"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Product Description</FormLabel>
-                  <FormControl>
-                    <Input placeholder="" type="text" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="image"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Product Image</FormLabel>
-                  <FormControl>
-                    <Input placeholder="" type="text" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="price"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Product Price</FormLabel>
-                  <FormControl>
-                    <Input placeholder="" type="number" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="quantity"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Product Quantity</FormLabel>
-                  <FormControl>
-                    <Input placeholder="" type="number" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="category"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Product Category</FormLabel>
-                  <FormControl>
-                    <Select
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder="Product Category" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {categoryData &&
-                          categoryData.map((item) => (
-                            <SelectItem key={item.id} value={item.id}>
-                              {item.name}
-                            </SelectItem>
-                          ))}
-                      </SelectContent>
-                    </Select>
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -191,7 +64,7 @@ const AddProduct = () => {
             />
 
             <span className="mt-10 w-4"></span>
-            <Button type="submit">Add New Product</Button>
+            <Button type="submit">Add New Category</Button>
           </form>
         </Form>
       </div>
@@ -199,4 +72,4 @@ const AddProduct = () => {
   );
 };
 
-export default AddProduct;
+export default AddCategory;

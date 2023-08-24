@@ -2,24 +2,18 @@
 
 import { Button } from "@/components/ui/button";
 import { ColumnDef } from "@tanstack/react-table";
-import { ArrowUpDown, MoreHorizontal } from "lucide-react";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+import { ArrowUpDown, Copy } from "lucide-react";
 import { toast } from "react-hot-toast";
 
 type FormateProduct = {
-  name: string;
-  featured: Number;
-  published: Number;
-  totalProduct: Number;
-  stock: Number;
   id: string;
+  name: string;
+  email: string;
+  country: string;
+  createdAt: string;
+  cart: {
+    products: { length: string };
+  };
 };
 
 export const columns: ColumnDef<FormateProduct>[] = [
@@ -38,56 +32,73 @@ export const columns: ColumnDef<FormateProduct>[] = [
     },
   },
   {
-    accessorKey: "totalProduct",
+    accessorKey: "email",
     header: ({ column }) => {
       return (
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Products
+          Email Address
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       );
     },
   },
   {
-    accessorKey: "stock",
+    accessorKey: "orders.length",
     header: ({ column }) => {
       return (
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Stock
+          Orders
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       );
     },
   },
   {
-    accessorKey: "published",
+    accessorKey: "cart.products.length",
     header: ({ column }) => {
       return (
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Published
+          Cart Contains
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
+    cell: ({ row }) => {
+      return <p>{row.original.cart.products.length} Product</p>;
+    },
+  },
+  {
+    accessorKey: "country",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Country
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       );
     },
   },
   {
-    accessorKey: "featured",
+    accessorKey: "createdAt",
     header: ({ column }) => {
       return (
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Featured
+          Account Created
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       );
@@ -96,31 +107,18 @@ export const columns: ColumnDef<FormateProduct>[] = [
   {
     id: "actions",
     cell: ({ row }) => {
-      const categoryId = row.original.id;
-
+      const userId = row.original.id;
       return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <MoreHorizontal className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem
-              onClick={() => {
-                navigator.clipboard.writeText(categoryId);
-                toast.success("Category Id Copied");
-              }}
-            >
-              Copy Category ID
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>Edit Category</DropdownMenuItem>
-            <DropdownMenuItem>Delete Category</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <Button
+          variant="ghost"
+          className="h-8 w-8 p-0"
+          onClick={() => {
+            navigator.clipboard.writeText(userId);
+            toast.success("User Id Copied");
+          }}
+        >
+          <Copy className="h-4 w-4" />
+        </Button>
       );
     },
   },

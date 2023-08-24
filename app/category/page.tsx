@@ -9,31 +9,32 @@ import { useRouter } from "next/navigation";
 import { toast } from "react-hot-toast";
 
 type Product = {
-  id: String;
-  product_name: String;
-  product_description: String;
+  id: string;
+  product_name: string;
+  product_description: string;
   price: Number;
   quantity: Number;
-  image: String;
-  createdAt: String;
-  updatedAt: String;
-  category: String;
+  image: string;
+  createdAt: string;
+  updatedAt: string;
+  category: string;
   featured: Boolean;
   visible: Boolean;
   Category: {};
 };
 
 type CategoryData = {
-  id: String;
-  name: String;
+  id: string;
+  name: string;
 };
 
 type FormateProduct = {
-  name: String;
+  name: string;
   featured: Number;
   published: Number;
   totalProduct: Number;
   stock: Number;
+  id: string;
 };
 
 const Product = () => {
@@ -45,7 +46,7 @@ const Product = () => {
   const getCategoryData = async (): Promise<void> => {
     toast.loading("Loading Data");
     try {
-      const resp = await axios.post("/api/category/get");
+      const resp = await axios.post("/api/category/getcategory");
       setCategoryData(resp.data);
       getProductData(resp.data);
     } catch (error: any) {
@@ -59,8 +60,8 @@ const Product = () => {
   const getProductData = async (
     categoryData: [
       {
-        id: String;
-        name: String;
+        id: string;
+        name: string;
       }
     ]
   ): Promise<void> => {
@@ -104,6 +105,7 @@ const Product = () => {
           published: visibleProduct,
           totalProduct,
           stock: totalQuantity,
+          id: element.id,
         });
       }
       setData(formattedData);
@@ -124,11 +126,6 @@ const Product = () => {
 
   return (
     <div className="container mx-auto py-10">
-      <div className="flex justify-end items-center mb-4">
-        <Button onClick={() => navigate.push("/products/addproduct")}>
-          Add Product <Plus className="h-4 w-4 ml-2" />
-        </Button>
-      </div>
       <DataTable columns={columns} data={data} />
     </div>
   );
