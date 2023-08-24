@@ -24,10 +24,16 @@ export const config = {
   matcher: [
     "/",
     "/login",
-    "/products",
     "/orders",
+    "/orders/:orderid*",
     "/users",
-    // "/settings",
+    "/products",
+    "/products/:productid*",
     "/products/addproduct",
+    "/category",
+    "/category/addcategory",
+    "/admin",
+    "/admin/addadmin",
+    "/admin/:adminid*",
   ],
 };

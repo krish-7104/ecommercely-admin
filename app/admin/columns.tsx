@@ -2,21 +2,26 @@
 
 import { Button } from "@/components/ui/button";
 import { ColumnDef } from "@tanstack/react-table";
-import { ArrowUpDown, Copy } from "lucide-react";
+import { ArrowUpDown, MoreHorizontal } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { toast } from "react-hot-toast";
 
-type FormateProduct = {
+type AdminType = {
   id: string;
   name: string;
   email: string;
-  country: string;
   createdAt: string;
-  cart: {
-    products: { length: string };
-  };
+  updatedAt: string;
 };
 
-export const columns: ColumnDef<FormateProduct>[] | [] = [
+export const columns: ColumnDef<AdminType>[] = [
   {
     accessorKey: "name",
     header: ({ column }) => {
@@ -39,52 +44,21 @@ export const columns: ColumnDef<FormateProduct>[] | [] = [
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Email Address
+          Email
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       );
     },
   },
   {
-    accessorKey: "orders.length",
+    accessorKey: "updatedAt",
     header: ({ column }) => {
       return (
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Orders
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      );
-    },
-  },
-  {
-    accessorKey: "cart?.products?.length",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Cart Contains
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      );
-    },
-    cell: ({ row }) => {
-      return <p>{row.original.cart.products.length} Product</p>;
-    },
-  },
-  {
-    accessorKey: "country",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Country
+          Updated At
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       );
@@ -98,27 +72,40 @@ export const columns: ColumnDef<FormateProduct>[] | [] = [
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Account Created
+          Created At
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       );
     },
   },
+
   {
     id: "actions",
     cell: ({ row }) => {
-      const userId = row.original.id;
+      const adminUserId = row.original.id;
       return (
-        <Button
-          variant="ghost"
-          className="h-8 w-8 p-0"
-          onClick={() => {
-            navigator.clipboard.writeText(userId);
-            toast.success("User Id Copied");
-          }}
-        >
-          <Copy className="h-4 w-4" />
-        </Button>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" className="h-8 w-8 p-0">
+              <span className="sr-only">Open menu</span>
+              <MoreHorizontal className="h-4 w-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuLabel>Actions</DropdownMenuLabel>
+            <DropdownMenuItem
+              onClick={() => {
+                navigator.clipboard.writeText(adminUserId);
+                toast.success("Admin User Id Copied");
+              }}
+            >
+              Copy Category ID
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem>View/Edit Admin</DropdownMenuItem>
+            <DropdownMenuItem>Delete Admin</DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       );
     },
   },

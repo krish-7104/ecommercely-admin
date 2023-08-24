@@ -95,13 +95,11 @@ const Navbar = () => {
               <MenubarMenu>
                 <MenubarTrigger>Admin Settings</MenubarTrigger>
                 <MenubarContent>
-                  <MenubarItem onClick={() => router.push("/category")}>
+                  <MenubarItem onClick={() => router.push("/admin")}>
                     View Admin
                   </MenubarItem>
                   <MenubarSeparator />
-                  <MenubarItem
-                    onClick={() => router.push("/category/addcategory")}
-                  >
+                  <MenubarItem onClick={() => router.push("/admin/addadmin")}>
                     Add Admin
                   </MenubarItem>
                   <MenubarSeparator />

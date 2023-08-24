@@ -181,5 +181,4 @@ export const columns: ColumnDef<Products>[] = [
 
 export function setRefreshTableCallback(callback: () => void) {
   refreshTableCallback = callback;
-  console.log("Hey");
 }
