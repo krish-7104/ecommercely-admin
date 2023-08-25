@@ -14,11 +14,10 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import axios from "axios";
-import { useToast } from "@/components/ui/use-toast";
 import { useRouter } from "next/navigation";
+import { toast } from "react-hot-toast";
 
 const AddAdmin = () => {
-  const { toast } = useToast();
   const router = useRouter();
   const formSchema = z.object({
     email: z.string().nonempty(),
@@ -34,18 +33,14 @@ const AddAdmin = () => {
     },
   });
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    toast.loading("Adding Admin..");
     try {
       const resp = await axios.post("/api/auth/register", values);
-      toast({
-        description: "Register Successfull",
-      });
-      router.replace("/");
+      toast.dismiss();
+      toast.success("Admin Added Successfull");
     } catch (error: any) {
-      toast({
-        variant: "destructive",
-        title: "Uh oh! Something went wrong.",
-        description: error.response.data,
-      });
+      toast.dismiss();
+      toast.error("Uh oh! Something went wrong.");
     }
   };
   return (

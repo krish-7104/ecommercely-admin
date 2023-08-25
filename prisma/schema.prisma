@@ -14,6 +14,7 @@ model AdminUser {
   password  String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  logs      Logs[]
 }
 
 
@@ -72,4 +73,13 @@ model Order {
   updatedAt DateTime @updatedAt
   products  Json
   user      User     @relation(fields: [userId], references: [id])
+}
+
+model Logs {
+  id        String   @id @default(uuid())
+  type      String   
+  message   String
+  createdAt DateTime @default(now())
+  userId    String
+  adminUser      AdminUser     @relation(fields: [userId], references: [id])
 }

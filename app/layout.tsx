@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { Montserrat } from "next/font/google";
 import Navbar from "@/components/navbar";
 import { Toaster } from "react-hot-toast";
+import { Providers } from "@/redux/provider";
 const montserrat = Montserrat({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -17,11 +18,13 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={montserrat.className}>
-        <Navbar />
-        {children}
-        <Toaster position="bottom-right" />
-      </body>
+      <Providers>
+        <body className={montserrat.className}>
+          <Navbar />
+          {children}
+          <Toaster position="bottom-right" />
+        </body>
+      </Providers>
     </html>
   );
 }

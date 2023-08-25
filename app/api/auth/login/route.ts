@@ -24,7 +24,7 @@ export async function POST(req: Request) {
     }
 
     const token = jwt.sign(
-      { userId: user.id },
+      { userId: user.id, name: user.name, email: email },
       process.env.SECRET_KEY || "HELLOKEY",
       {
         expiresIn: "2h",

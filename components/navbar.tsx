@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useContext, useEffect, useReducer } from "react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
   Popover,
@@ -13,7 +13,6 @@ import {
   CommandList,
 } from "@/components/ui/command";
 import axios from "axios";
-import Link from "next/link";
 import toast from "react-hot-toast";
 import {
   Menubar,
@@ -24,10 +23,27 @@ import {
   MenubarTrigger,
 } from "@/components/ui/menubar";
 import { usePathname, useRouter } from "next/navigation";
+import { useDispatch, useSelector } from "react-redux";
+import { setUserHandler } from "@/redux/actions";
+import { InitialState } from "@/redux/types";
 
 const Navbar = () => {
   const router = useRouter();
   const pathname = usePathname();
+  const dispatch = useDispatch();
+  const userData = useSelector((state: InitialState) => state?.userData);
+  useEffect(() => {
+    const getUserTokenData = async () => {
+      try {
+        const resp = await axios.get("/api/auth/user");
+        dispatch(setUserHandler(resp.data));
+      } catch (error: any) {
+        router.push("/login");
+      }
+    };
+    getUserTokenData();
+  }, [dispatch, router]);
+
   const logoutHandler = async () => {
     toast.loading("Processing Logout...");
     try {
@@ -115,7 +131,10 @@ const Navbar = () => {
           <Popover>
             <PopoverTrigger>
               <Avatar className="cursor-pointer shadow">
-                <AvatarFallback>KJ</AvatarFallback>
+                <AvatarFallback>
+                  {userData?.user?.name.split(" ")[0].slice(0, 1)}
+                  {userData?.user?.name.split(" ")[1].slice(0, 1)}
+                </AvatarFallback>
               </Avatar>
             </PopoverTrigger>
             <PopoverContent className="w-40 p-2">

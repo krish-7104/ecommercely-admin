@@ -33,7 +33,7 @@ const Login = () => {
     toast.loading("Logging In...");
     try {
       const resp = await axios.post("/api/auth/login", values);
-      router.replace("/");
+      router.push("/");
       toast.dismiss();
       toast.success("Login Successfull");
     } catch (error: any) {
@@ -44,7 +44,7 @@ const Login = () => {
     }
   };
   return (
-    <section className="relative bg-[#f6f9fc] flex justify-center items-center h-[100vh] w-full">
+    <section className="relative bg-[#f6f9fc] flex justify-center items-center h-[90vh] w-full">
       <div className="w-[35%] bg-white shadow-md px-7 py-5">
         <p className="text-xl font-semibold text-center mb-6">
           Login - Admin Panel
