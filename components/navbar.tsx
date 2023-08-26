@@ -58,7 +58,7 @@ const Navbar = () => {
   };
   return (
     <nav className="w-full shadow-md border-b py-2 px-8 flex justify-between items-center">
-      <p className="font-bold text-lg">Admin Dashboard</p>
+      <p className="font-bold text-lg">Ecommercely Admin</p>
       {pathname !== "/login" && (
         <div className="flex justify-end items-center w-[80%]">
           <div className="flex justify-evenly items-center mr-6">
