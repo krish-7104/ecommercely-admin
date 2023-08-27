@@ -43,9 +43,8 @@ type Cart = {
 const Users = () => {
   const navigate = useRouter();
   const [dataFetched, setDataFetched] = useState(false);
-  const [userData, setUserData] = useState([]);
-  const getCategoryData = async (): Promise<void> => {
-    toast.loading("Loading Data");
+  const [userData, setUserData] = useState<UserData[]>([]);
+  const getUserData = async (): Promise<void> => {
     try {
       const resp = await axios.post("/api/user/getUsers");
       let formattedData: UserData[] = [];
@@ -81,7 +80,7 @@ const Users = () => {
         };
         formattedData.push(data);
       });
-      console.log(formattedData);
+      setUserData(formattedData);
       toast.dismiss();
     } catch (error: any) {
       setUserData([]);
@@ -93,7 +92,7 @@ const Users = () => {
 
   useEffect(() => {
     if (!dataFetched) {
-      getCategoryData();
+      getUserData();
     }
   }, [dataFetched]);
 
@@ -102,7 +101,7 @@ const Users = () => {
       {userData.length !== 0 && userData && (
         <DataTable columns={columns} data={userData} />
       )}
-      {userData.length === 0 && <DataTable columns={columns} data={[]} />}
+      {userData.length === 0 && <DataTable columns={columns} data={userData} />}
     </div>
   );
 };

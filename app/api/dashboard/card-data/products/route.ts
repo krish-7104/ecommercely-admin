@@ -14,61 +14,56 @@ export async function GET(req: Request) {
     const today = startOfDay(new Date());
     const yesterday = subDays(today, 1);
 
-    const changesToday = products.filter(
+    const changesTodayProduct = products.filter(
       (item) =>
-        differenceInDays(
-          today,
-          startOfDay(
-            new Date(
-              item.createdAt.toLocaleString("en-US", {
-                timeZone: "Asia/Kolkata",
-                day: "numeric",
-                month: "numeric",
-                year: "numeric",
-                hour: "numeric",
-                minute: "numeric",
-                second: "numeric",
-                hour12: true,
-              })
-            )
-          )
-        ) === 0
+        differenceInDays(today, startOfDay(new Date(item.createdAt))) === 0
     ).length;
 
-    const changesYesterday = products.filter(
+    const changesYesterdayProduct = products.filter(
       (item) =>
-        differenceInDays(
-          yesterday,
-          startOfDay(
-            new Date(
-              item.createdAt.toLocaleString("en-US", {
-                timeZone: "Asia/Kolkata",
-                day: "numeric",
-                month: "numeric",
-                year: "numeric",
-                hour: "numeric",
-                minute: "numeric",
-                second: "numeric",
-                hour12: true,
-              })
-            )
-          )
-        ) === 0
+        differenceInDays(yesterday, startOfDay(new Date(item.createdAt))) === 0
     ).length;
 
-    const percentageIncrease =
-      changesToday === 0
-        ? 0
-        : changesYesterday !== 0
-        ? ((changesToday - changesYesterday) / changesYesterday) * 100
-        : changesToday * 100;
+    const changesTodayStock = products.reduce(
+      (sum, product) =>
+        differenceInDays(today, startOfDay(new Date(product.createdAt))) === 0
+          ? sum + product.quantity
+          : sum,
+      0
+    );
+
+    const changesYesterdayStock = products.reduce(
+      (sum, product) =>
+        differenceInDays(yesterday, startOfDay(new Date(product.createdAt))) ===
+        0
+          ? sum + product.quantity
+          : sum,
+      0
+    );
+
+    const percentageIncreaseProduct =
+      changesYesterdayProduct !== 0
+        ? ((changesTodayProduct - changesYesterdayProduct) /
+            changesYesterdayProduct) *
+          100
+        : changesTodayProduct * 100;
+
+    const percentageIncreaseStock =
+      changesYesterdayStock !== 0
+        ? ((changesTodayStock - changesYesterdayStock) /
+            changesYesterdayStock) *
+          100
+        : changesTodayStock * 100;
 
     const responseData = {
       totalQuantity,
       totalProducts,
-      changesToday,
-      changesYesterday,
-      percentageIncrease,
+      changesTodayProduct,
+      changesYesterdayProduct,
+      percentageIncreaseProduct,
+      changesTodayStock,
+      changesYesterdayStock,
+      percentageIncreaseStock,
     };
 
     return new NextResponse(JSON.stringify(responseData), {

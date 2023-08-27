@@ -26,14 +26,14 @@ type DashCardData = {
 
 const dashCardDefaultData = [
   {
-    title: "Order",
+    title: "Orders",
     data: 0,
     type: "neutral",
     today: 0,
     percentage: 0,
   },
   {
-    title: "Gross Sale",
+    title: "Gross Profit",
     data: 0,
     type: "neutral",
     today: 0,
@@ -92,24 +92,6 @@ const Home = () => {
     }
   };
 
-  const fetchDataAndUpdateCard = async (
-    apiEndpoint: string,
-    title: string,
-    updateFn: (data: any) => number
-  ) => {
-    try {
-      const resp = await axios.get(apiEndpoint);
-      const updatedCardData = [...dashCardData];
-      const index = updatedCardData.findIndex((card) => card.title === title);
-      if (index !== -1) {
-        updatedCardData[index].data = updateFn(resp.data);
-        setDashCardData(updatedCardData);
-      }
-    } catch (error: any) {
-      console.log(error);
-    }
-  };
-
   const getUserTokenData = async () => {
     try {
       const resp = await axios.get("/api/auth/user");
@@ -124,12 +106,24 @@ const Home = () => {
     let updatedCardData = [...dashCardData];
     let index = updatedCardData.findIndex((card) => card.title === "Products");
     updatedCardData[index].data = productResp.data.totalProducts;
-    updatedCardData[index].today = productResp.data.changesToday;
-    updatedCardData[index].percentage = productResp.data.percentageIncrease;
+    updatedCardData[index].today = productResp.data.changesTodayProduct;
+    updatedCardData[index].percentage =
+      productResp.data.percentageIncreaseProduct;
     updatedCardData[index].type =
-      productResp.data.percentageIncrease === 0
+      productResp.data.percentageIncreaseProduct === 0
         ? "neutral"
-        : productResp.data.percentageIncrease > 0
+        : productResp.data.percentageIncreaseProduct > 0
+        ? "positive"
+        : "negative";
+    index = updatedCardData.findIndex((card) => card.title === "Stock");
+    updatedCardData[index].data = productResp.data.totalQuantity;
+    updatedCardData[index].today = productResp.data.changesTodayStock;
+    updatedCardData[index].percentage =
+      productResp.data.percentageIncreaseStock;
+    updatedCardData[index].type =
+      productResp.data.percentageIncreaseStock === 0
+        ? "neutral"
+        : productResp.data.percentageIncreaseStock > 0
         ? "positive"
         : "negative";
     setDashCardData(updatedCardData);
@@ -138,18 +132,50 @@ const Home = () => {
     updatedCardData = [...dashCardData];
     index = updatedCardData.findIndex((card) => card.title === "Category");
     updatedCardData[index].data = categoryResp.data.totalCategory;
+    updatedCardData[index].today = categoryResp.data.changesToday;
+    updatedCardData[index].percentage = categoryResp.data.percentageIncrease;
+    updatedCardData[index].type =
+      categoryResp.data.percentageIncrease === 0
+        ? "neutral"
+        : categoryResp.data.percentageIncrease > 0
+        ? "positive"
+        : "negative";
     setDashCardData(updatedCardData);
 
     const userResp = await axios.get("/api/dashboard/card-data/user");
     updatedCardData = [...dashCardData];
     index = updatedCardData.findIndex((card) => card.title === "Users");
     updatedCardData[index].data = userResp.data.totalUser;
-    updatedCardData[index].today = productResp.data.changesToday;
-    updatedCardData[index].percentage = productResp.data.percentageIncrease;
+    updatedCardData[index].today = userResp.data.changesToday;
+    updatedCardData[index].percentage = userResp.data.percentageIncrease;
     updatedCardData[index].type =
-      productResp.data.percentageIncrease === 0
+      userResp.data.percentageIncrease === 0
         ? "neutral"
-        : productResp.data.percentageIncrease > 0
+        : userResp.data.percentageIncrease > 0
+        ? "positive"
+        : "negative";
+    setDashCardData(updatedCardData);
+
+    const orderResp = await axios.get("/api/dashboard/card-data/orders");
+    updatedCardData = [...dashCardData];
+    index = updatedCardData.findIndex((card) => card.title === "Orders");
+    updatedCardData[index].data = orderResp.data.totalOrders;
+    updatedCardData[index].today = orderResp.data.changesTodayOrder;
+    updatedCardData[index].percentage = orderResp.data.percentageIncreaseOrder;
+    updatedCardData[index].type =
+      orderResp.data.percentageIncreaseOrder === 0
+        ? "neutral"
+        : orderResp.data.percentageIncreaseOrder > 0
+        ? "positive"
+        : "negative";
+    index = updatedCardData.findIndex((card) => card.title === "Gross Profit");
+    updatedCardData[index].data = orderResp.data.totalProfit;
+    updatedCardData[index].today = orderResp.data.changesTodayProfit;
+    updatedCardData[index].percentage = orderResp.data.percentageIncreaseProfit;
+    updatedCardData[index].type =
+      orderResp.data.percentageIncreaseProfit === 0
+        ? "neutral"
+        : orderResp.data.percentageIncreaseProfit > 0
         ? "positive"
         : "negative";
     setDashCardData(updatedCardData);

@@ -16,6 +16,7 @@ export async function POST(req: Request) {
       return new NextResponse("Category Already Exists", { status: 403 });
     }
   } catch (error) {
+    console.log(error);
     return new NextResponse("Internal Error", { status: 500 });
   }
 }

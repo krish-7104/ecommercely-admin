@@ -73,7 +73,14 @@ export const columns: ColumnDef<FormateProduct>[] | [] = [
       );
     },
     cell: ({ row }) => {
-      return <p>{row.original.cart.products.length} Product</p>;
+      return (
+        <p>
+          {row?.original?.cart?.products
+            ? row?.original?.cart?.products.length
+            : 0}{" "}
+          Products
+        </p>
+      );
     },
   },
   {

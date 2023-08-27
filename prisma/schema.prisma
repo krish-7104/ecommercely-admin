@@ -17,7 +17,6 @@ model AdminUser {
   logs      Logs[]
 }
 
-
 model User {
   id        String   @id @default(uuid())
   name      String
@@ -31,7 +30,7 @@ model User {
   country   String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  cart      Cart? 
+  cart      Cart?
   orders    Order[]
 }
 
@@ -51,9 +50,11 @@ model Product {
 }
 
 model Category {
-  id       String    @id @default(uuid())
-  name     String    @unique
-  products Product[]
+  id        String    @id @default(uuid())
+  name      String    @unique
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  products  Product[]
 }
 
 model Cart {
@@ -61,8 +62,8 @@ model Cart {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   products  Json
-  user      User     @relation(fields: [userId], references: [id])
   userId    String   @unique
+  user      User     @relation(fields: [userId], references: [id])
 }
 
 model Order {
@@ -72,14 +73,15 @@ model Order {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   products  Json
+  status    String   @default("Pending")
   user      User     @relation(fields: [userId], references: [id])
 }
 
 model Logs {
-  id        String   @id @default(uuid())
-  type      String   
+  id        String    @id @default(uuid())
+  type      String
   message   String
-  createdAt DateTime @default(now())
+  createdAt DateTime  @default(now())
   userId    String
-  adminUser      AdminUser     @relation(fields: [userId], references: [id])
+  adminUser AdminUser @relation(fields: [userId], references: [id])
 }
