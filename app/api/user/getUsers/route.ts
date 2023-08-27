@@ -18,6 +18,7 @@ export async function POST(req: Request) {
         cart: true,
         orders: true,
       },
+      orderBy: { createdAt: "desc" },
     });
     return NextResponse.json(userData);
   } catch (error) {

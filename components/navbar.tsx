@@ -122,6 +122,11 @@ const Navbar = () => {
                 </MenubarContent>
               </MenubarMenu>
               <MenubarMenu>
+                <MenubarTrigger onClick={() => router.push("/logs")}>
+                  Logs
+                </MenubarTrigger>
+              </MenubarMenu>
+              <MenubarMenu>
                 <MenubarTrigger onClick={() => router.push("/settings")}>
                   Settings
                 </MenubarTrigger>

@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect } from "react";
+import React from "react";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -14,11 +14,13 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import axios from "axios";
-import { useRouter } from "next/navigation";
 import { toast } from "react-hot-toast";
+import { addLogHandler } from "@/helper/AddLog";
+import { useSelector } from "react-redux";
+import { InitialState } from "@/redux/types";
 
 const AddAdmin = () => {
-  const router = useRouter();
+  const userData = useSelector((state: InitialState) => state?.userData);
   const formSchema = z.object({
     email: z.string().nonempty(),
     password: z.string().nonempty(),
@@ -35,7 +37,12 @@ const AddAdmin = () => {
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     toast.loading("Adding Admin..");
     try {
-      const resp = await axios.post("/api/auth/register", values);
+      await axios.post("/api/auth/register", values);
+      await addLogHandler({
+        type: "Admin",
+        message: `Admin Added: ${values.name} (${values.email})`,
+        userId: userData.user.userId,
+      });
       toast.dismiss();
       toast.success("Admin Added Successfull");
     } catch (error: any) {

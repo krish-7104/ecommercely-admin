@@ -1,5 +1,4 @@
 "use client";
-
 import { Button } from "@/components/ui/button";
 import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown, MoreHorizontal } from "lucide-react";
@@ -14,6 +13,9 @@ import {
 import { Switch } from "@/components/ui/switch";
 import { toast } from "react-hot-toast";
 import axios from "axios";
+import { addLogHandler } from "@/helper/AddLog";
+import mystore from "@/redux/store";
+const state = mystore.getState();
 let refreshTableCallback: (() => void) | null = null;
 
 export type Products = {
@@ -26,13 +28,25 @@ export type Products = {
   featured: Boolean;
 };
 
-const updateData = async (id: string, type: any, value: Boolean) => {
+const updateData = async (
+  id: string,
+  type: any,
+  value: Boolean,
+  name: string
+) => {
   toast.loading("Uploading Data");
   try {
     const resp = await axios.put("/api/product/updateproduct", {
       id,
       [type]: value,
     });
+    console.log(state.userData);
+    await addLogHandler({
+      type: "Product",
+      message: `Product Updated: ${type} - ${value} (${name})`,
+      userId: state.userData.user.userId,
+    });
+    console.log(`Product Updated: ${type} - ${value} (${name})`);
     if (refreshTableCallback) {
       refreshTableCallback();
     }
@@ -103,7 +117,12 @@ export const columns: ColumnDef<Products>[] = [
       <Switch
         checked={Boolean(row.original.visible)}
         onCheckedChange={(value) =>
-          updateData(row.original.id, "visible", value)
+          updateData(
+            row.original.id,
+            "visible",
+            value,
+            row.original.product_name
+          )
         }
         aria-label="Select row"
       />
@@ -126,7 +145,12 @@ export const columns: ColumnDef<Products>[] = [
       <Switch
         checked={Boolean(row.original.featured)}
         onCheckedChange={(value) =>
-          updateData(row.original.id, "featured", value)
+          updateData(
+            row.original.id,
+            "featured",
+            value,
+            row.original.product_name
+          )
         }
         aria-label="Select row"
       />

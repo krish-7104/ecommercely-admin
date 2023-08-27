@@ -3,6 +3,20 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import DashCard from "./(dashboard)/DashCard";
+import {
+  PieChart,
+  Pie,
+  Cell,
+  Legend,
+  BarChart,
+  CartesianGrid,
+  XAxis,
+  YAxis,
+  Tooltip,
+  Bar,
+} from "recharts";
+
+const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042"];
 
 const GREETINGS = {
   morning: "Good Morning",
@@ -74,7 +88,14 @@ const Home = () => {
   const [greet, setGreeting] = useState(GREETINGS.morning);
   const [dashCardData, setDashCardData] = useState([...dashCardDefaultData]);
   const [userData, setUserData] = useState<User | null>(null);
-
+  const [mainData, setMainData] = useState({
+    products: [] as any[],
+    category: [] as any[],
+    orders: [] as any[],
+    users: [] as any[],
+  });
+  const [pieChartData, setPieChartData] = useState([]);
+  const [analysisData, setAnalysisData] = useState([]);
   useEffect(() => {
     getUserTokenData();
     getCardData();
@@ -101,84 +122,154 @@ const Home = () => {
     }
   };
 
+  const updateCardData = (title: string, data: any) => {
+    const index = dashCardData.findIndex((card) => card.title === title);
+    const updatedCardData = [...dashCardData];
+    if (title === "Products") {
+      setMainData((prevMainData) => ({
+        ...prevMainData,
+        products: data.products,
+      }));
+      updatedCardData[index].data = data.totalProducts;
+      updatedCardData[index].today = data.changesTodayProduct;
+      updatedCardData[index].percentage = data.percentageIncreaseProduct;
+      updatedCardData[index].type =
+        data.percentageIncreaseProduct === 0
+          ? "neutral"
+          : data.percentageIncreaseProduct > 0
+          ? "positive"
+          : "negative";
+    } else if (title === "Stock") {
+      updatedCardData[index].data = data.totalQuantity;
+      updatedCardData[index].today = data.changesTodayStock;
+      updatedCardData[index].percentage = data.percentageIncreaseStock;
+      updatedCardData[index].type =
+        data.percentageIncreaseStock === 0
+          ? "neutral"
+          : data.percentageIncreaseStock > 0
+          ? "positive"
+          : "negative";
+    } else if (title === "Category") {
+      setMainData((prevMainData) => ({
+        ...prevMainData,
+        category: data.category,
+      }));
+      updatedCardData[index].data = data.totalCategory;
+      updatedCardData[index].today = data.changesToday;
+      updatedCardData[index].percentage = data.percentageIncrease;
+      updatedCardData[index].type =
+        data.percentageIncrease === 0
+          ? "neutral"
+          : data.percentageIncrease > 0
+          ? "positive"
+          : "negative";
+    } else if (title === "Users") {
+      setMainData((prevMainData) => ({
+        ...prevMainData,
+        users: data.users,
+      }));
+      updatedCardData[index].data = data.totalUser;
+      updatedCardData[index].today = data.changesToday;
+      updatedCardData[index].percentage = data.percentageIncrease;
+      updatedCardData[index].type =
+        data.percentageIncrease === 0
+          ? "neutral"
+          : data.percentageIncrease > 0
+          ? "positive"
+          : "negative";
+    } else if (title === "Orders") {
+      setMainData((prevMainData) => ({
+        ...prevMainData,
+        orders: data.orders,
+      }));
+      updatedCardData[index].data = data.totalOrders;
+      updatedCardData[index].today = data.changesTodayOrder;
+      updatedCardData[index].percentage = data.percentageIncreaseOrder;
+      updatedCardData[index].type =
+        data.percentageIncreaseOrder === 0
+          ? "neutral"
+          : data.percentageIncreaseOrder > 0
+          ? "positive"
+          : "negative";
+    } else if (title === "Gross Profit") {
+      updatedCardData[index].data = data.totalProfit;
+      updatedCardData[index].today = data.changesTodayProfit;
+      updatedCardData[index].percentage = data.percentageIncreaseProfit;
+      updatedCardData[index].type =
+        data.percentageIncreaseProfit === 0
+          ? "neutral"
+          : data.percentageIncreaseProfit > 0
+          ? "positive"
+          : "negative";
+    }
+    setDashCardData(updatedCardData);
+  };
+
+  useEffect(() => {
+    const categoryData = mainData.category.map((category) => ({
+      name: category.name,
+      value: mainData.products.filter(
+        (product) => product.category === category.id
+      ).length,
+    }));
+    console.log(categoryData);
+    setPieChartData([...categoryData]);
+  }, [mainData]);
+
+  useEffect(() => {
+    const months = [
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December",
+    ];
+
+    const monthlyOrderData = Array(12).fill(0);
+    const monthlyProfitData = Array(12).fill(0);
+
+    mainData.orders.forEach((order) => {
+      const orderDate = new Date(order.createdAt);
+      const monthIndex = orderDate.getMonth();
+      monthlyOrderData[monthIndex]++;
+      monthlyProfitData[monthIndex] += order.total;
+    });
+
+    const analysisData = months.map((month, index) => ({
+      name: month,
+      Orders: monthlyOrderData[index],
+      Profit: monthlyProfitData[index],
+    }));
+
+    setAnalysisData(analysisData);
+  }, [mainData]);
+
   const getCardData = async () => {
-    const productResp = await axios.get("/api/dashboard/card-data/products");
-    let updatedCardData = [...dashCardData];
-    let index = updatedCardData.findIndex((card) => card.title === "Products");
-    updatedCardData[index].data = productResp.data.totalProducts;
-    updatedCardData[index].today = productResp.data.changesTodayProduct;
-    updatedCardData[index].percentage =
-      productResp.data.percentageIncreaseProduct;
-    updatedCardData[index].type =
-      productResp.data.percentageIncreaseProduct === 0
-        ? "neutral"
-        : productResp.data.percentageIncreaseProduct > 0
-        ? "positive"
-        : "negative";
-    index = updatedCardData.findIndex((card) => card.title === "Stock");
-    updatedCardData[index].data = productResp.data.totalQuantity;
-    updatedCardData[index].today = productResp.data.changesTodayStock;
-    updatedCardData[index].percentage =
-      productResp.data.percentageIncreaseStock;
-    updatedCardData[index].type =
-      productResp.data.percentageIncreaseStock === 0
-        ? "neutral"
-        : productResp.data.percentageIncreaseStock > 0
-        ? "positive"
-        : "negative";
-    setDashCardData(updatedCardData);
+    try {
+      const [productResp, categoryResp, userResp, orderResp] =
+        await Promise.all([
+          axios.get("/api/dashboard/card-data/products"),
+          axios.get("/api/dashboard/card-data/category"),
+          axios.get("/api/dashboard/card-data/user"),
+          axios.get("/api/dashboard/card-data/orders"),
+        ]);
 
-    const categoryResp = await axios.get("/api/dashboard/card-data/category");
-    updatedCardData = [...dashCardData];
-    index = updatedCardData.findIndex((card) => card.title === "Category");
-    updatedCardData[index].data = categoryResp.data.totalCategory;
-    updatedCardData[index].today = categoryResp.data.changesToday;
-    updatedCardData[index].percentage = categoryResp.data.percentageIncrease;
-    updatedCardData[index].type =
-      categoryResp.data.percentageIncrease === 0
-        ? "neutral"
-        : categoryResp.data.percentageIncrease > 0
-        ? "positive"
-        : "negative";
-    setDashCardData(updatedCardData);
-
-    const userResp = await axios.get("/api/dashboard/card-data/user");
-    updatedCardData = [...dashCardData];
-    index = updatedCardData.findIndex((card) => card.title === "Users");
-    updatedCardData[index].data = userResp.data.totalUser;
-    updatedCardData[index].today = userResp.data.changesToday;
-    updatedCardData[index].percentage = userResp.data.percentageIncrease;
-    updatedCardData[index].type =
-      userResp.data.percentageIncrease === 0
-        ? "neutral"
-        : userResp.data.percentageIncrease > 0
-        ? "positive"
-        : "negative";
-    setDashCardData(updatedCardData);
-
-    const orderResp = await axios.get("/api/dashboard/card-data/orders");
-    updatedCardData = [...dashCardData];
-    index = updatedCardData.findIndex((card) => card.title === "Orders");
-    updatedCardData[index].data = orderResp.data.totalOrders;
-    updatedCardData[index].today = orderResp.data.changesTodayOrder;
-    updatedCardData[index].percentage = orderResp.data.percentageIncreaseOrder;
-    updatedCardData[index].type =
-      orderResp.data.percentageIncreaseOrder === 0
-        ? "neutral"
-        : orderResp.data.percentageIncreaseOrder > 0
-        ? "positive"
-        : "negative";
-    index = updatedCardData.findIndex((card) => card.title === "Gross Profit");
-    updatedCardData[index].data = orderResp.data.totalProfit;
-    updatedCardData[index].today = orderResp.data.changesTodayProfit;
-    updatedCardData[index].percentage = orderResp.data.percentageIncreaseProfit;
-    updatedCardData[index].type =
-      orderResp.data.percentageIncreaseProfit === 0
-        ? "neutral"
-        : orderResp.data.percentageIncreaseProfit > 0
-        ? "positive"
-        : "negative";
-    setDashCardData(updatedCardData);
+      updateCardData("Products", productResp.data);
+      updateCardData("Stock", productResp.data);
+      updateCardData("Category", categoryResp.data);
+      updateCardData("Users", userResp.data);
+      updateCardData("Orders", orderResp.data);
+      updateCardData("Gross Profit", orderResp.data);
+    } catch (error) {
+      router.push("/login");
+    }
   };
 
   return (
@@ -194,6 +285,48 @@ const Home = () => {
             {dashCardData.map((card, index) => (
               <DashCard key={index} data={card} />
             ))}
+          </div>
+        </section>
+        <section className="w-[92%] mx-auto my-10">
+          <div className="w-full bg-white shadow-md border rounded-md p-4 flex justify-center items-center flex-col">
+            <p className="font-semibold text-center my-4 text-xl">
+              Sale Analysis
+            </p>
+            <BarChart width={1000} height={250} data={analysisData}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="name" />
+              <YAxis />
+              <Tooltip />
+              <Legend />
+              <Bar dataKey="Orders" fill="#8884d8" />
+              <Bar dataKey="Profit" fill="#82ca9d" />
+            </BarChart>
+          </div>
+        </section>
+        <section className="w-[92%] mx-auto my-10">
+          <div className="w-[40%] bg-white shadow-md border rounded-md">
+            <p className="font-semibold text-center mt-4 text-lg">
+              Products in Each Category
+            </p>
+            <PieChart width={400} height={400}>
+              <Pie
+                data={pieChartData}
+                dataKey="value"
+                cx={200}
+                cy={200}
+                outerRadius={80}
+                fill="#8884d8"
+                label
+              >
+                {pieChartData.map((entry, index) => (
+                  <Cell
+                    key={`cell-${index}`}
+                    fill={COLORS[index % COLORS.length]}
+                  />
+                ))}
+              </Pie>
+              <Legend verticalAlign="bottom" height={36} />
+            </PieChart>
           </div>
         </section>
       </section>

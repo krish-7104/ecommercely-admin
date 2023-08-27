@@ -1,8 +1,10 @@
 import prismadb from "@/lib/prismadb";
 import { NextResponse } from "next/server";
-export async function POST(req: Request) {
+export async function GET(req: Request) {
   try {
-    const logs = await prismadb.logs.findMany({});
+    const logs = await prismadb.logs.findMany({
+      orderBy: { createdAt: "desc" },
+    });
     return NextResponse.json(logs);
   } catch (error) {
     console.log(error);

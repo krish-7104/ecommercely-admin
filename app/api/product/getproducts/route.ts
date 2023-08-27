@@ -6,6 +6,7 @@ export async function POST(req: Request) {
       include: {
         Category: true,
       },
+      orderBy: { createdAt: "desc" },
     });
     return NextResponse.json(product);
   } catch (error) {

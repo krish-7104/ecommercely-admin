@@ -22,7 +22,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { addLogHandler } from "@/helper/AddLog";
+import { useSelector } from "react-redux";
+import { InitialState } from "@/redux/types";
 const AddProduct = () => {
+  const userData = useSelector((state: InitialState) => state.userData);
   const [categoryData, setCategoryData] = useState<
     Array<{ name: string; id: string }>
   >([]);
@@ -52,7 +56,12 @@ const AddProduct = () => {
       );
       values.category = selectedCategory ? selectedCategory.id : "";
 
-      const resp = await axios.post("/api/product/addproduct", values);
+      await axios.post("/api/product/addproduct", values);
+      await addLogHandler({
+        type: "Product",
+        message: `Product Added: ${values.product_name}`,
+        userId: userData.user.userId,
+      });
       toast.dismiss();
       toast.success("Product Added");
       form.reset();

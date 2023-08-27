@@ -15,7 +15,11 @@ import { Input } from "@/components/ui/input";
 import axios from "axios";
 import { Button } from "@/components/ui/button";
 import toast from "react-hot-toast";
+import { addLogHandler } from "@/helper/AddLog";
+import { useSelector } from "react-redux";
+import { InitialState } from "@/redux/types";
 const AddCategory = () => {
+  const userData = useSelector((state: InitialState) => state?.userData);
   const formSchema = z.object({
     name: z.string().nonempty(),
   });
@@ -29,6 +33,11 @@ const AddCategory = () => {
     toast.loading("Adding Category..");
     try {
       const resp = await axios.post("/api/category/addcategory", values);
+      const logResp = await addLogHandler({
+        type: "Category",
+        message: `Category Added: ${values.name}`,
+        userId: userData.user.userId,
+      });
       toast.dismiss();
       toast.success("Category Added");
       form.reset();

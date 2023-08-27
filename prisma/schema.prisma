@@ -55,6 +55,8 @@ model Category {
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   products  Product[]
+  order     Order[]
+
 }
 
 model Cart {
@@ -75,6 +77,8 @@ model Order {
   products  Json
   status    String   @default("Pending")
   user      User     @relation(fields: [userId], references: [id])
+  category  String
+  Category  Category  @relation(fields: [category], references: [id])
 }
 
 model Logs {

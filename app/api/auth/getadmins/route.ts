@@ -10,6 +10,7 @@ export async function POST(req: Request) {
         createdAt: true,
         updatedAt: true,
       },
+      orderBy: { createdAt: "desc" },
     });
     return NextResponse.json(admins);
   } catch (error) {

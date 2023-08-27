@@ -54,6 +54,7 @@ export async function GET(req: Request) {
         : changesTodayProfit * 100;
 
     const responseData = {
+      orders,
       totalOrders,
       totalProfit,
       changesTodayOrder,

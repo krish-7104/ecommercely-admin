@@ -59,6 +59,7 @@ export async function GET(req: Request) {
         : changesToday * 100;
 
     const responseData = {
+      category,
       totalCategory,
       changesToday,
       changesYesterday,

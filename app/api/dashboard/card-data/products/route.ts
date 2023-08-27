@@ -16,7 +16,7 @@ export async function GET(req: Request) {
 
     const changesTodayProduct = products.filter(
       (item) =>
-        differenceInDays(today, startOfDay(new Date(item.createdAt))) === 0
+        differenceInDays(today, startOfDay(new Date(item?.createdAt))) === 0
     ).length;
 
     const changesYesterdayProduct = products.filter(
@@ -56,6 +56,7 @@ export async function GET(req: Request) {
         : changesTodayStock * 100;
 
     const responseData = {
+      products,
       totalQuantity,
       totalProducts,
       changesTodayProduct,
