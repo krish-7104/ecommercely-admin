@@ -18,20 +18,21 @@ model AdminUser {
 }
 
 model User {
-  id        String   @id @default(uuid())
-  name      String
-  email     String   @unique
-  password  String
-  phoneno   String?  @unique
-  address   String?
-  pincode   Int?
-  state     String?
-  city      String?
-  country   String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  cart      Cart?
-  orders    Order[]
+  id         String      @id @default(uuid())
+  name       String
+  email      String      @unique
+  password   String
+  phoneno    String?     @unique
+  address    String?
+  pincode    Int?
+  state      String?
+  city       String?
+  country    String?
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
+  cart       Cart?
+  orders     Order[]
+  resetToken resetToken?
 }
 
 model Product {
@@ -55,8 +56,6 @@ model Category {
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   products  Product[]
-  order     Order[]
-
 }
 
 model Cart {
@@ -77,8 +76,6 @@ model Order {
   products  Json
   status    String   @default("Pending")
   user      User     @relation(fields: [userId], references: [id])
-  category  String
-  Category  Category  @relation(fields: [category], references: [id])
 }
 
 model Logs {
@@ -88,4 +85,12 @@ model Logs {
   createdAt DateTime  @default(now())
   userId    String
   adminUser AdminUser @relation(fields: [userId], references: [id])
+}
+
+model resetToken {
+  id        String   @id
+  userId    String   @unique
+  token     String
+  expiresAt DateTime
+  User      User     @relation(fields: [userId], references: [id])
 }

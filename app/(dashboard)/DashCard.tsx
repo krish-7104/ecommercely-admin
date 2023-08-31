@@ -34,7 +34,7 @@ const DashCard = ({ data }: DashCardData) => {
           ) : (
             <Activity className="mr-1" size={14} />
           )}
-          {data.percentage}%
+          {data.percentage.toFixed(2)}%
         </p>
       </div>
     </div>

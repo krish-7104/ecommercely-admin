@@ -290,7 +290,20 @@ const Home = () => {
         <section className="w-[92%] mx-auto my-10">
           <div className="w-full bg-white shadow-md border rounded-md p-4 flex justify-center items-center flex-col">
             <p className="font-semibold text-center my-4 text-xl">
-              Sale Analysis
+              Profit Analysis
+            </p>
+            <BarChart width={1000} height={250} data={analysisData}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="name" />
+              <YAxis />
+              <Tooltip />
+              <Legend />
+              <Bar dataKey="Profit" fill="#82ca9d" />
+            </BarChart>
+          </div>
+          <div className="w-full bg-white shadow-md border rounded-md p-4 flex justify-center items-center flex-col">
+            <p className="font-semibold text-center my-4 text-xl">
+              Orders Analysis
             </p>
             <BarChart width={1000} height={250} data={analysisData}>
               <CartesianGrid strokeDasharray="3 3" />
@@ -299,7 +312,6 @@ const Home = () => {
               <Tooltip />
               <Legend />
               <Bar dataKey="Orders" fill="#8884d8" />
-              <Bar dataKey="Profit" fill="#82ca9d" />
             </BarChart>
           </div>
         </section>
