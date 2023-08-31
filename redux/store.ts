@@ -1,7 +1,7 @@
 "use client";
 import { legacy_createStore as createStore } from "redux";
-import { Reducers } from "./reducers";
+import { reducers } from "@/redux/reducers";
 
-const mystore = createStore(Reducers);
+const mystore = createStore(reducers);
 
 export default mystore;

@@ -1,6 +1,6 @@
 import { InitialState, Action } from "@/redux/types";
 
-let initialState: InitialState = {
+const initialState: InitialState = {
   userData: {
     message: "",
     user: {
@@ -11,11 +11,14 @@ let initialState: InitialState = {
   },
 };
 
-export const Reducers = (state = initialState, action: Action) => {
+export const reducers = (
+  state = initialState,
+  action: Action
+): InitialState => {
   switch (action.type) {
     case "USER_DATA":
       return { ...state, userData: action.payload };
     default:
-      break;
+      return state;
   }
 };
