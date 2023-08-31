@@ -42,7 +42,7 @@ model Product {
   price               Int
   quantity            Int
   image               String?
-  createdAt           DateTime? @default(now())
+  createdAt           DateTime @default(now())
   updatedAt           DateTime  @updatedAt
   category            String
   featured            Boolean?  @default(false)
