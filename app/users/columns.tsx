@@ -11,8 +11,8 @@ type FormateProduct = {
   email: string;
   country: string;
   createdAt: string;
-  cart: {
-    products: { length: string };
+  carts: {
+    products: { length: number };
   };
 };
 
@@ -75,8 +75,8 @@ export const columns: ColumnDef<FormateProduct>[] | [] = [
     cell: ({ row }) => {
       return (
         <p>
-          {row?.original?.cart?.products
-            ? row?.original?.cart?.products.length
+          {row?.original?.carts?.products
+            ? row?.original?.carts?.products.length
             : 0}{" "}
           Products
         </p>
