@@ -94,8 +94,12 @@ const Home = () => {
     orders: [] as any[],
     users: [] as any[],
   });
-  const [pieChartData, setPieChartData] = useState([]);
-  const [analysisData, setAnalysisData] = useState([]);
+  const [pieChartData, setPieChartData] = useState<
+    { name: string; value: number }[]
+  >([]);
+  const [analysisData, setAnalysisData] = useState<
+    { name: string; Orders: any; Profit: any }[]
+  >([]);
   useEffect(() => {
     getUserTokenData();
     getCardData();
