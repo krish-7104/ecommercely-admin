@@ -216,7 +216,6 @@ const Home = () => {
         (product) => product.category === category.id
       ).length,
     }));
-    console.log(categoryData);
     setPieChartData([...categoryData]);
   }, [mainData]);
 
