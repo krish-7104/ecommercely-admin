@@ -14,64 +14,66 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import axios from "axios";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import toast from "react-hot-toast";
-import Link from "next/link";
-const Login = () => {
+
+const ForgetPassword = () => {
+  useEffect(() => {
+    const logoutHandler = async () => {
+      try {
+        await axios.get("/api/auth/logout");
+      } catch (error: any) {
+        toast.error(error.response.data);
+      }
+    };
+    logoutHandler();
+  }, []);
+  const { resetToken } = useParams();
   const router = useRouter();
   const formSchema = z.object({
-    email: z.string().nonempty(),
     password: z.string().nonempty(),
+    confirmpassword: z.string().nonempty(),
   });
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      email: "",
       password: "",
+      confirmpassword: "",
     },
   });
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    toast.loading("Logging In...");
-    try {
-      const resp = await axios.post("/api/auth/login", values);
-      router.push("/");
-      toast.dismiss();
-      toast.success("Login Successfull");
-    } catch (error: any) {
-      toast.dismiss();
-      if (error.response.data === "Invalid Credentials")
+    if (values.password === values.confirmpassword) {
+      toast.loading("Updating Password..");
+      try {
+        const resp = await axios.post("/api/auth/update-password", {
+          token: resetToken,
+          password: values.password,
+        });
+        toast.success("Updated Successfull");
+        toast.dismiss();
+        toast.loading("Redirecting...");
+        setTimeout(() => {
+          router.replace("/");
+        }, 1000);
+      } catch (error: any) {
+        toast.dismiss();
         toast.error(error.response.data);
-      else toast.error("Uh oh! Something went wrong.");
+      }
+    } else {
+      toast.error("Both Password Are Different!");
     }
   };
   return (
-    <section className="relative bg-[#f6f9fc] flex justify-center items-center h-[90vh] w-full">
-      <div className="w-[35%] bg-white shadow-md px-7 py-5">
+    <section className="relative bg-[#f6f9fc] flex justify-center items-center h-[88vh] w-full">
+      <div className="w-[35%] bg-white shadow-lg border rounded-md px-7 py-5">
         <p className="text-xl font-semibold text-center mb-6">
-          Login - Admin Panel
+          Update Password
         </p>
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
             className="space-y-3 flex justify-center flex-col"
           >
-            <FormField
-              control={form.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Email Address</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="abc@admin.com"
-                      type="email"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
             <FormField
               control={form.control}
               name="password"
@@ -85,10 +87,20 @@ const Login = () => {
                 </FormItem>
               )}
             />
-            <p className="text-right text-sm font-medium my-3">
-              <Link href={"/reset-password"}>Forget Password?</Link>
-            </p>
-            <Button type="submit">Login Now</Button>
+            <FormField
+              control={form.control}
+              name="confirmpassword"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Confirm Password</FormLabel>
+                  <FormControl>
+                    <Input placeholder="*********" type="password" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <Button type="submit">Update Password</Button>
           </form>
         </Form>
       </div>
@@ -96,4 +108,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default ForgetPassword;

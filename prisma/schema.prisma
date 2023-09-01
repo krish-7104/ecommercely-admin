@@ -14,24 +14,24 @@ model AdminUser {
   password  String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  logs      Logs[]
+  Logs      Logs[]
 }
 
 model User {
-  id         String      @id @default(uuid())
-  name       String
-  email      String      @unique
-  password   String
-  phoneno    String?     @unique
-  address    String?
-  pincode    Int?
-  state      String?
-  city       String?
-  country    String?
-  createdAt  DateTime    @default(now())
-  updatedAt  DateTime    @updatedAt
-  cart       Cart?
-  orders     Order[]
+  id        String   @id @default(uuid())
+  name      String
+  email     String   @unique
+  password  String
+  phoneno   String?  @unique
+  address   String?
+  pincode   Int?
+  state     String?
+  city      String?
+  country   String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  carts     Cart?
+  orders    Order[]
   resetToken resetToken?
 }
 
@@ -42,7 +42,7 @@ model Product {
   price               Int
   quantity            Int
   image               String?
-  createdAt           DateTime @default(now())
+  createdAt           DateTime? @default(now())
   updatedAt           DateTime  @updatedAt
   category            String
   featured            Boolean?  @default(false)
@@ -54,7 +54,7 @@ model Category {
   id        String    @id @default(uuid())
   name      String    @unique
   createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  updatedAt DateTime
   products  Product[]
 }
 
@@ -79,18 +79,18 @@ model Order {
 }
 
 model Logs {
-  id        String    @id @default(uuid())
+  id        String   @id @default(uuid())
   type      String
   message   String
   createdAt DateTime  @default(now())
   userId    String
-  adminUser AdminUser @relation(fields: [userId], references: [id])
+  AdminUser AdminUser @relation(fields: [userId], references: [id])
 }
 
 model resetToken {
-  id        String   @id
+  id        String   @id @default(uuid())
   userId    String   @unique
+  user      User     @relation(fields: [userId], references: [id])
   token     String
   expiresAt DateTime
-  User      User     @relation(fields: [userId], references: [id])
 }

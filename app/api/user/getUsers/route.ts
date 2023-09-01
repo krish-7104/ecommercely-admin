@@ -15,7 +15,7 @@ export async function POST(req: Request) {
         country: true,
         createdAt: true,
         updatedAt: true,
-        cart: true,
+        carts: true,
         orders: true,
       },
       orderBy: { createdAt: "desc" },

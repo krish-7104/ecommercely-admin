@@ -29,7 +29,7 @@ import { InitialState } from "@/redux/types";
 
 const Navbar = () => {
   const router = useRouter();
-  const pathname = usePathname();
+  const pathname: string = usePathname();
   const dispatch = useDispatch();
   const userData = useSelector((state: InitialState) => state?.userData);
   useEffect(() => {
@@ -41,8 +41,15 @@ const Navbar = () => {
         router.push("/login");
       }
     };
-    getUserTokenData();
-  }, [dispatch, router]);
+
+    if (
+      pathname !== "/login" &&
+      pathname !== "/reset-password" &&
+      !pathname.includes("verify-token")
+    ) {
+      getUserTokenData();
+    }
+  }, [dispatch, router, pathname]);
 
   const logoutHandler = async () => {
     toast.loading("Processing Logout...");
@@ -59,106 +66,108 @@ const Navbar = () => {
   return (
     <nav className="w-full shadow-md border-b py-2 px-8 flex justify-between items-center">
       <p className="font-bold text-lg">Ecommercely Admin</p>
-      {pathname !== "/login" && (
-        <div className="flex justify-end items-center w-[80%]">
-          <div className="flex justify-evenly items-center mr-6">
-            <Menubar>
-              <MenubarMenu>
-                <MenubarTrigger onClick={() => router.push("/")}>
-                  Home
-                </MenubarTrigger>
-              </MenubarMenu>
-              <MenubarMenu>
-                <MenubarTrigger>Products</MenubarTrigger>
-                <MenubarContent>
-                  <MenubarItem onClick={() => router.push("/products")}>
-                    View Product
-                  </MenubarItem>
-                  <MenubarSeparator />
-                  <MenubarItem
-                    onClick={() => router.push("/products/addproduct")}
-                  >
-                    Add Product
-                  </MenubarItem>
-                  <MenubarSeparator />
-                </MenubarContent>
-              </MenubarMenu>
-              <MenubarMenu>
-                <MenubarTrigger>Category</MenubarTrigger>
-                <MenubarContent>
-                  <MenubarItem onClick={() => router.push("/category")}>
-                    View Category
-                  </MenubarItem>
-                  <MenubarSeparator />
-                  <MenubarItem
-                    onClick={() => router.push("/category/addcategory")}
-                  >
-                    Add Category
-                  </MenubarItem>
-                  <MenubarSeparator />
-                </MenubarContent>
-              </MenubarMenu>
-              <MenubarMenu>
-                <MenubarTrigger onClick={() => router.push("/orders")}>
-                  Orders
-                </MenubarTrigger>
-              </MenubarMenu>
-              <MenubarMenu>
-                <MenubarTrigger onClick={() => router.push("/users")}>
-                  Users
-                </MenubarTrigger>
-              </MenubarMenu>
-              <MenubarMenu>
-                <MenubarTrigger>Admin Settings</MenubarTrigger>
-                <MenubarContent>
-                  <MenubarItem onClick={() => router.push("/admin")}>
-                    View Admin
-                  </MenubarItem>
-                  <MenubarSeparator />
-                  <MenubarItem onClick={() => router.push("/admin/addadmin")}>
-                    Add Admin
-                  </MenubarItem>
-                  <MenubarSeparator />
-                </MenubarContent>
-              </MenubarMenu>
-              <MenubarMenu>
-                <MenubarTrigger onClick={() => router.push("/logs")}>
-                  Logs
-                </MenubarTrigger>
-              </MenubarMenu>
-              <MenubarMenu>
-                <MenubarTrigger onClick={() => router.push("/settings")}>
-                  Settings
-                </MenubarTrigger>
-              </MenubarMenu>
-            </Menubar>
-          </div>
-          <Popover>
-            <PopoverTrigger>
-              <Avatar className="cursor-pointer shadow">
-                <AvatarFallback>
-                  {userData?.user?.name?.split(" ")[0]?.slice(0, 1)}
-                  {userData?.user?.name?.split(" ")[1]?.slice(0, 1)}
-                </AvatarFallback>
-              </Avatar>
-            </PopoverTrigger>
-            <PopoverContent className="w-40 p-2">
-              <Command>
-                <CommandList>
-                  <CommandGroup>
-                    <CommandItem
-                      className="cursor-pointer font-medium"
-                      onClickCapture={logoutHandler}
+      {pathname !== "/login" &&
+        pathname !== "/reset-password" &&
+        !pathname.includes("/verify-token") && (
+          <div className="flex justify-end items-center w-[80%]">
+            <div className="flex justify-evenly items-center mr-6">
+              <Menubar>
+                <MenubarMenu>
+                  <MenubarTrigger onClick={() => router.push("/")}>
+                    Home
+                  </MenubarTrigger>
+                </MenubarMenu>
+                <MenubarMenu>
+                  <MenubarTrigger>Products</MenubarTrigger>
+                  <MenubarContent>
+                    <MenubarItem onClick={() => router.push("/products")}>
+                      View Product
+                    </MenubarItem>
+                    <MenubarSeparator />
+                    <MenubarItem
+                      onClick={() => router.push("/products/addproduct")}
                     >
-                      Logout
-                    </CommandItem>
-                  </CommandGroup>
-                </CommandList>
-              </Command>
-            </PopoverContent>
-          </Popover>
-        </div>
-      )}
+                      Add Product
+                    </MenubarItem>
+                    <MenubarSeparator />
+                  </MenubarContent>
+                </MenubarMenu>
+                <MenubarMenu>
+                  <MenubarTrigger>Category</MenubarTrigger>
+                  <MenubarContent>
+                    <MenubarItem onClick={() => router.push("/category")}>
+                      View Category
+                    </MenubarItem>
+                    <MenubarSeparator />
+                    <MenubarItem
+                      onClick={() => router.push("/category/addcategory")}
+                    >
+                      Add Category
+                    </MenubarItem>
+                    <MenubarSeparator />
+                  </MenubarContent>
+                </MenubarMenu>
+                <MenubarMenu>
+                  <MenubarTrigger onClick={() => router.push("/orders")}>
+                    Orders
+                  </MenubarTrigger>
+                </MenubarMenu>
+                <MenubarMenu>
+                  <MenubarTrigger onClick={() => router.push("/users")}>
+                    Users
+                  </MenubarTrigger>
+                </MenubarMenu>
+                <MenubarMenu>
+                  <MenubarTrigger>Admin Settings</MenubarTrigger>
+                  <MenubarContent>
+                    <MenubarItem onClick={() => router.push("/admin")}>
+                      View Admin
+                    </MenubarItem>
+                    <MenubarSeparator />
+                    <MenubarItem onClick={() => router.push("/admin/addadmin")}>
+                      Add Admin
+                    </MenubarItem>
+                    <MenubarSeparator />
+                  </MenubarContent>
+                </MenubarMenu>
+                <MenubarMenu>
+                  <MenubarTrigger onClick={() => router.push("/logs")}>
+                    Logs
+                  </MenubarTrigger>
+                </MenubarMenu>
+                <MenubarMenu>
+                  <MenubarTrigger onClick={() => router.push("/settings")}>
+                    Settings
+                  </MenubarTrigger>
+                </MenubarMenu>
+              </Menubar>
+            </div>
+            <Popover>
+              <PopoverTrigger>
+                <Avatar className="cursor-pointer shadow">
+                  <AvatarFallback>
+                    {userData?.user?.name?.split(" ")[0]?.slice(0, 1)}
+                    {userData?.user?.name?.split(" ")[1]?.slice(0, 1)}
+                  </AvatarFallback>
+                </Avatar>
+              </PopoverTrigger>
+              <PopoverContent className="w-40 p-2">
+                <Command>
+                  <CommandList>
+                    <CommandGroup>
+                      <CommandItem
+                        className="cursor-pointer font-medium"
+                        onClickCapture={logoutHandler}
+                      >
+                        Logout
+                      </CommandItem>
+                    </CommandGroup>
+                  </CommandList>
+                </Command>
+              </PopoverContent>
+            </Popover>
+          </div>
+        )}
     </nav>
   );
 };
