@@ -193,8 +193,22 @@ export const columns: ColumnDef<Products>[] = [
               Copy Product ID
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>View Product</DropdownMenuItem>
-            <DropdownMenuItem>Edit Product</DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() =>
+                window.open(
+                  `https://ecommercely.vercel.app/product/${productId}`
+                )
+              }
+            >
+              View Product
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() =>
+                window.open(`/products/editproduct/${productId}`, "_self")
+              }
+            >
+              Edit Product
+            </DropdownMenuItem>
             <DropdownMenuItem>Delete Product</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

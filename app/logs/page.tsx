@@ -1,4 +1,5 @@
 "use client";
+import dateFormaterHandler from "@/helper/DataFormatter";
 import axios from "axios";
 import { ActivitySquare } from "lucide-react";
 import React, { useEffect, useState } from "react";
@@ -14,27 +15,8 @@ const Logs = () => {
   const [logs, setLogs] = useState<Log[]>([]);
   const getLogData = async () => {
     const { data } = await axios.get("/api/logs/getlogs");
-    let formattedData: Log[] = [];
-    data.forEach((item: Log) => {
-      let createdAtNew = new Date(item.createdAt);
-      let data = {
-        ...item,
-        createdAt: createdAtNew
-          .toLocaleString("en-US", {
-            timeZone: "Asia/Kolkata",
-            day: "numeric",
-            month: "numeric",
-            year: "numeric",
-            hour: "numeric",
-            minute: "numeric",
-            second: "numeric",
-            hour12: true,
-          })
-          .replace(" GMT+5:30", ""),
-      };
-      formattedData.push(data);
-    });
-    setLogs(formattedData);
+
+    setLogs(data);
   };
   useEffect(() => {
     getLogData();
@@ -54,8 +36,10 @@ const Logs = () => {
               <p className="text-xs float-right inline-block text-right font-semibold bg-green-400 px-3 py-1 rounded-full">
                 {item.type}
               </p>
-              <p className="font-medium">{item.message}</p>
-              <p className="text-sm mt-1">{item.createdAt}</p>
+              <p className="font-medium text-sm w-[90%]">{item.message}</p>
+              <p className="text-xs mt-1">
+                {dateFormaterHandler(item.createdAt)}
+              </p>
             </div>
           ))}
       </section>

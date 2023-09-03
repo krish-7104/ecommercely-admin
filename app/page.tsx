@@ -4,9 +4,6 @@ import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import DashCard from "./(dashboard)/DashCard";
 import {
-  PieChart,
-  Pie,
-  Cell,
   Legend,
   BarChart,
   CartesianGrid,
@@ -15,8 +12,14 @@ import {
   Tooltip,
   Bar,
 } from "recharts";
-
-const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042"];
+import { Pie } from "react-chartjs-2";
+import {
+  Chart as ChartJS,
+  ArcElement,
+  Tooltip as ChartTooltip,
+  Legend as ChartLegend,
+} from "chart.js";
+ChartJS.register(ArcElement, ChartTooltip, ChartLegend);
 
 const GREETINGS = {
   morning: "Good Morning",
@@ -94,12 +97,26 @@ const Home = () => {
     orders: [] as any[],
     users: [] as any[],
   });
-  const [pieChartData, setPieChartData] = useState<
-    { name: string; value: number }[]
-  >([]);
+  const [pieChartData, setPieChartData] = useState<{
+    labels: string[];
+    datasets: [
+      {
+        data: number[];
+        backgroundColor: [
+          "rgba(75, 192, 192, 0.6)",
+          "rgba(255, 99, 132, 0.6)",
+          "rgba(255, 205, 86, 0.6)",
+          "rgba(54, 162, 235, 0.6)",
+          "rgba(153, 102, 255, 0.6)"
+        ];
+      }
+    ];
+  }>();
+
   const [analysisData, setAnalysisData] = useState<
     { name: string; Orders: any; Profit: any }[]
   >([]);
+
   useEffect(() => {
     getUserTokenData();
     getCardData();
@@ -210,13 +227,27 @@ const Home = () => {
   };
 
   useEffect(() => {
-    const categoryData = mainData.category.map((category) => ({
-      name: category.name,
-      value: mainData.products.filter(
-        (product) => product.category === category.id
-      ).length,
-    }));
-    setPieChartData([...categoryData]);
+    const categoryLabels = mainData.category.map((category) => category.name);
+    const categoryData = mainData.category.map(
+      (category) =>
+        mainData.products.filter((product) => product.category === category.id)
+          .length
+    );
+    setPieChartData({
+      labels: categoryLabels,
+      datasets: [
+        {
+          data: categoryData,
+          backgroundColor: [
+            "rgba(75, 192, 192, 0.6)",
+            "rgba(255, 99, 132, 0.6)",
+            "rgba(255, 205, 86, 0.6)",
+            "rgba(54, 162, 235, 0.6)",
+            "rgba(153, 102, 255, 0.6)",
+          ],
+        },
+      ],
+    });
   }, [mainData]);
 
   useEffect(() => {
@@ -304,6 +335,8 @@ const Home = () => {
               <Bar dataKey="Profit" fill="#82ca9d" />
             </BarChart>
           </div>
+        </section>
+        <section className="w-[92%] mx-auto my-10">
           <div className="w-full bg-white shadow-md border rounded-md p-4 flex justify-center items-center flex-col">
             <p className="font-semibold text-center my-4 text-xl">
               Orders Analysis
@@ -318,31 +351,35 @@ const Home = () => {
             </BarChart>
           </div>
         </section>
-        <section className="w-[92%] mx-auto my-10">
-          <div className="w-[40%] bg-white shadow-md border rounded-md">
+        <section className="w-[92%] mx-auto my-10 flex justify-between items-center">
+          <section className="w-[40%] bg-white shadow-md border rounded-md flex justify-center items-center flex-col">
             <p className="font-semibold text-center mt-4 text-lg">
               Products in Each Category
             </p>
-            <PieChart width={400} height={400}>
-              <Pie
-                data={pieChartData}
-                dataKey="value"
-                cx={200}
-                cy={200}
-                outerRadius={80}
-                fill="#8884d8"
-                label
-              >
-                {pieChartData.map((entry, index) => (
-                  <Cell
-                    key={`cell-${index}`}
-                    fill={COLORS[index % COLORS.length]}
-                  />
-                ))}
-              </Pie>
-              <Legend verticalAlign="bottom" height={36} />
-            </PieChart>
-          </div>
+            <div className="w-[80%] flex justify-center items-center">
+              {pieChartData &&
+              pieChartData.labels &&
+              pieChartData.labels.length !== 0 ? (
+                <Pie data={pieChartData} />
+              ) : (
+                <p>No data available for the pie chart.</p>
+              )}
+            </div>
+          </section>
+          <section className="w-[40%] bg-white shadow-md border rounded-md flex justify-center items-center flex-col">
+            <p className="font-semibold text-center mt-4 text-lg">
+              Products in Each Category
+            </p>
+            <div className="w-[80%] flex justify-center items-center">
+              {pieChartData &&
+              pieChartData.labels &&
+              pieChartData.labels.length !== 0 ? (
+                <Pie data={pieChartData} />
+              ) : (
+                <p>No data available for the pie chart.</p>
+              )}
+            </div>
+          </section>
         </section>
       </section>
     </main>

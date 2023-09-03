@@ -3,8 +3,6 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { columns } from "./columns";
 import { DataTable } from "./data-table";
-import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { toast } from "react-hot-toast";
 
