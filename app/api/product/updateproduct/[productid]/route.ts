@@ -1,20 +1,19 @@
 import prismadb from "@/lib/prismadb";
 import { NextResponse } from "next/server";
 
-export async function POST(
+export async function PUT(
   req: Request,
-  context: { params: { productId: string } }
+  context: { params: { productid: string } }
 ) {
   try {
-    const product = await prismadb.product.findUnique({
-      where: { id: context.params.productId },
-      include: {
-        Category: true,
-      },
+    const data = await req.json();
+    const product = await prismadb.product.update({
+      where: { id: context.params.productid },
+      data: data,
     });
 
     if (product) {
-      return NextResponse.json(product);
+      return new NextResponse("Product Updated", { status: 200 });
     } else {
       return new NextResponse("Product not found", { status: 404 });
     }

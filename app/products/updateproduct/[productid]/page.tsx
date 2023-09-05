@@ -12,90 +12,72 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import axios from "axios";
 import { Button } from "@/components/ui/button";
-import toast from "react-hot-toast";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { addLogHandler } from "@/helper/AddLog";
-import { useSelector } from "react-redux";
-import { InitialState } from "@/redux/types";
+import axios from "axios";
+import { toast } from "react-hot-toast";
 import { useParams } from "next/navigation";
-const AddProduct = () => {
+
+const UpdateProduct = () => {
+  const [loading, setLoading] = useState(true);
+  const [data, setData] = useState({
+    product_name: "",
+    product_description: "",
+    image: "",
+    price: 0,
+    quantity: 0,
+    id: "",
+  });
   const param = useParams();
-  const userData = useSelector((state: InitialState) => state.userData);
-  const [categoryData, setCategoryData] = useState<
-    Array<{ name: string; id: string }>
-  >([]);
-  const [dataFetched, setDataFetched] = useState<Boolean>(false);
+  useEffect(() => {
+    const getProductData = async () => {
+      try {
+        const resp = await axios.post(
+          `/api/product/getproducts/${param.productid}`
+        );
+        setData(resp.data);
+        setLoading(false);
+      } catch (error: any) {
+        toast.error(error.message);
+      }
+    };
+    param.productid && getProductData();
+  }, [param.productid]);
+
   const formSchema = z.object({
     product_name: z.string().nonempty(),
     product_description: z.string().nonempty(),
+    image: z.string().nonempty(),
     price: z.coerce.number(),
     quantity: z.coerce.number(),
-    image: z.string().nonempty(),
-    category: z.string().nonempty(),
   });
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-      product_name: "",
-      product_description: "",
-      image: "",
-      category: "",
-    },
   });
-  const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    toast.loading("Adding Product..");
-    try {
-      await axios.post("/api/product/updateproduct", values);
-      await addLogHandler({
-        type: "Product",
-        message: `Product Updated: ${values.product_name}`,
-        userId: userData.user.userId,
-      });
-      toast.dismiss();
-      toast.success("Product Updated");
-      form.reset();
-    } catch (error: any) {
-      toast.dismiss();
-      toast.error("Something Went Wrong!");
-    }
-  };
 
   useEffect(() => {
-    if (!dataFetched) {
-      getCategoryData();
-    }
-  }, [dataFetched]);
+    form.setValue("product_name", data.product_name);
+    form.setValue("product_description", data.product_description);
+    form.setValue("image", data.image);
+    form.setValue("price", data.price);
+    form.setValue("quantity", data.quantity);
+  }, [data, form]);
 
-  const getCategoryData = async (): Promise<void> => {
-    toast.loading("Loading Data");
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-      const resp = await axios.post("/api/category/getcategory");
-      setCategoryData(resp.data);
-      console.log(resp.data);
-      setDataFetched(true);
+      toast.loading("Updating Product");
+      await axios.put(`/api/product/updateproduct/${data.id}`, values);
       toast.dismiss();
+      toast.success("Product Updated");
     } catch (error: any) {
-      setCategoryData([]);
-      setDataFetched(true);
       toast.dismiss();
-      toast.error("Something Went Wrong!");
+      toast.error(error.message);
     }
   };
-
   return (
-    <section className="relative flex justify-center items-center w-full mt-6">
+    <main className="flex w-full justify-center items-center">
       <div className="w-[35%] py-5">
-        <p className="text-xl font-semibold text-center mb-6">
-          Add New Product
-        </p>
+        <p className="text-xl font-semibold text-center mb-6">Update Product</p>
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
@@ -166,42 +148,13 @@ const AddProduct = () => {
                 </FormItem>
               )}
             />
-            <FormField
-              control={form.control}
-              name="category"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Product Category</FormLabel>
-                  <FormControl>
-                    <Select
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder="Product Category" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {categoryData &&
-                          categoryData.map((item) => (
-                            <SelectItem key={item.id} value={item.id}>
-                              {item.name}
-                            </SelectItem>
-                          ))}
-                      </SelectContent>
-                    </Select>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
             <span className="mt-10 w-4"></span>
-            <Button type="submit">Add New Product</Button>
+            <Button type="submit">Update Product</Button>
           </form>
         </Form>
       </div>
-    </section>
+    </main>
   );
 };
 
-export default AddProduct;
+export default UpdateProduct;

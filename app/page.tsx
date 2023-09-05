@@ -308,7 +308,7 @@ const Home = () => {
 
   return (
     <main className="w-full bg-[#f6f9fc] flex justify-center items-center">
-      <section className="w-[92%]">
+      <section className="w-[92%] container">
         <div className="my-6 flex justify-between items-start">
           <p className="font-semibold text-xl">
             {`${greet}, ${userData?.name || ""} 🙌`}

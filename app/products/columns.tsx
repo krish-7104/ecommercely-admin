@@ -204,7 +204,7 @@ export const columns: ColumnDef<Products>[] = [
             </DropdownMenuItem>
             <DropdownMenuItem
               onClick={() =>
-                window.open(`/products/editproduct/${productId}`, "_self")
+                window.open(`/products/updateproduct/${productId}`, "_self")
               }
             >
               Edit Product
