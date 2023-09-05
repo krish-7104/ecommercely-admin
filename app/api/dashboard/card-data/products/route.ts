@@ -16,16 +16,19 @@ export async function GET(req: Request) {
 
     const changesTodayProduct = products.filter(
       (item) =>
-        differenceInDays(today, startOfDay(new Date(item?.createdAt))) === 0
+        item?.createdAt &&
+        differenceInDays(today, startOfDay(new Date(item.createdAt))) === 0
     ).length;
 
     const changesYesterdayProduct = products.filter(
       (item) =>
+        item?.createdAt &&
         differenceInDays(yesterday, startOfDay(new Date(item.createdAt))) === 0
     ).length;
 
     const changesTodayStock = products.reduce(
       (sum, product) =>
+        product.createdAt &&
         differenceInDays(today, startOfDay(new Date(product.createdAt))) === 0
           ? sum + product.quantity
           : sum,
@@ -34,8 +37,9 @@ export async function GET(req: Request) {
 
     const changesYesterdayStock = products.reduce(
       (sum, product) =>
+        product.createdAt &&
         differenceInDays(yesterday, startOfDay(new Date(product.createdAt))) ===
-        0
+          0
           ? sum + product.quantity
           : sum,
       0
