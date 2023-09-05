@@ -71,6 +71,9 @@ export const columns: ColumnDef<Products>[] = [
         </Button>
       );
     },
+    cell: ({ row }) => {
+      return <p className="line-clamp-2">{row.original.product_name}</p>;
+    },
   },
   {
     accessorKey: "price",
@@ -195,6 +198,13 @@ export const columns: ColumnDef<Products>[] = [
             <DropdownMenuSeparator />
             <DropdownMenuItem
               onClick={() =>
+                window.open(`/products/updateproduct/${productId}`, "_self")
+              }
+            >
+              Edit Product
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() =>
                 window.open(
                   `https://ecommercely.vercel.app/product/${productId}`
                 )
@@ -202,14 +212,6 @@ export const columns: ColumnDef<Products>[] = [
             >
               View Product
             </DropdownMenuItem>
-            <DropdownMenuItem
-              onClick={() =>
-                window.open(`/products/updateproduct/${productId}`, "_self")
-              }
-            >
-              Edit Product
-            </DropdownMenuItem>
-            <DropdownMenuItem>Delete Product</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       );

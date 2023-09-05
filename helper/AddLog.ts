@@ -8,6 +8,5 @@ type LogType = {
 
 export const addLogHandler = async (values: LogType) => {
   const resp = await axios.post("/api/logs/addlog", values);
-  console.log(resp);
   return resp;
 };

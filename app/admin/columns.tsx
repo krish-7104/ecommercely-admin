@@ -12,6 +12,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { toast } from "react-hot-toast";
+import dateFormaterHandler from "@/helper/DataFormatter";
 
 type AdminType = {
   id: string;
@@ -63,6 +64,9 @@ export const columns: ColumnDef<AdminType>[] = [
         </Button>
       );
     },
+    cell: ({ row }) => {
+      return <p>{dateFormaterHandler(row.original.updatedAt)}</p>;
+    },
   },
   {
     accessorKey: "createdAt",
@@ -76,6 +80,9 @@ export const columns: ColumnDef<AdminType>[] = [
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       );
+    },
+    cell: ({ row }) => {
+      return <p>{dateFormaterHandler(row.original.createdAt)}</p>;
     },
   },
 
@@ -99,10 +106,9 @@ export const columns: ColumnDef<AdminType>[] = [
                 toast.success("Admin User Id Copied");
               }}
             >
-              Copy Category ID
+              Copy Admin ID
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>View/Edit Admin</DropdownMenuItem>
             <DropdownMenuItem>Delete Admin</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

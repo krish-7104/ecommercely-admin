@@ -16,6 +16,9 @@ import { Button } from "@/components/ui/button";
 import axios from "axios";
 import { toast } from "react-hot-toast";
 import { useParams } from "next/navigation";
+import { addLogHandler } from "@/helper/AddLog";
+import { useSelector } from "react-redux";
+import { InitialState } from "@/redux/types";
 
 const UpdateProduct = () => {
   const [loading, setLoading] = useState(true);
@@ -28,15 +31,19 @@ const UpdateProduct = () => {
     id: "",
   });
   const param = useParams();
+  const userData = useSelector((state: InitialState) => state.userData);
   useEffect(() => {
     const getProductData = async () => {
       try {
+        toast.loading("Loading Product Data..");
         const resp = await axios.post(
           `/api/product/getproducts/${param.productid}`
         );
+        toast.dismiss();
         setData(resp.data);
         setLoading(false);
       } catch (error: any) {
+        toast.dismiss();
         toast.error(error.message);
       }
     };
@@ -68,6 +75,11 @@ const UpdateProduct = () => {
       toast.loading("Updating Product");
       await axios.put(`/api/product/updateproduct/${data.id}`, values);
       toast.dismiss();
+      await addLogHandler({
+        type: "Product",
+        message: `Product Updated: ${values.product_name}`,
+        userId: userData.user.userId,
+      });
       toast.success("Product Updated");
     } catch (error: any) {
       toast.dismiss();

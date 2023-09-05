@@ -82,7 +82,6 @@ const AddProduct = () => {
     try {
       const resp = await axios.post("/api/category/getcategory");
       setCategoryData(resp.data);
-      console.log(resp.data);
       setDataFetched(true);
       toast.dismiss();
     } catch (error: any) {

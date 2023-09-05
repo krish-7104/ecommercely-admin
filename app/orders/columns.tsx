@@ -131,8 +131,11 @@ export const columns: ColumnDef<FormateProduct>[] = [
               Copy User Email
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>View Order</DropdownMenuItem>
-            <DropdownMenuItem>Change Status</DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() => window.open(`orders/${row.original.id}`, "_self")}
+            >
+              View Order
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       );
