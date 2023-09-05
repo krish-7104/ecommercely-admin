@@ -55,7 +55,7 @@ const Order = () => {
       setData(resp.data);
     };
     getOrderData();
-  }, []);
+  }, [param.orderid]);
 
   const updateStatushandler = async (value: string) => {
     data && setData({ ...data, status: value });
@@ -66,7 +66,7 @@ const Order = () => {
       });
       await addLogHandler({
         type: "Order",
-        message: `Order Updated: Status - ${value}`,
+        message: `Order Updated: Status - ${value} (${data?.id})`,
         userId: userData.user.userId,
       });
       toast.dismiss();

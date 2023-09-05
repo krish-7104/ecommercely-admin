@@ -71,15 +71,15 @@ const UpdateProduct = () => {
   }, [data, form]);
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    toast.loading("Updating Product");
     try {
-      toast.loading("Updating Product");
       await axios.put(`/api/product/updateproduct/${data.id}`, values);
-      toast.dismiss();
       await addLogHandler({
         type: "Product",
         message: `Product Updated: ${values.product_name}`,
         userId: userData.user.userId,
       });
+      toast.dismiss();
       toast.success("Product Updated");
     } catch (error: any) {
       toast.dismiss();

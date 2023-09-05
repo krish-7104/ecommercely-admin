@@ -15,7 +15,6 @@ const Logs = () => {
   const [logs, setLogs] = useState<Log[]>([]);
   const getLogData = async () => {
     const { data } = await axios.get("/api/logs/getlogs");
-
     setLogs(data);
   };
   useEffect(() => {

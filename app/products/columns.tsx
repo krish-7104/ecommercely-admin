@@ -36,11 +36,9 @@ const updateData = async (
 ) => {
   toast.loading("Uploading Data");
   try {
-    const resp = await axios.put("/api/product/updateproduct", {
-      id,
+    const resp = await axios.put(`/api/product/updateproduct/${id}`, {
       [type]: value,
     });
-    console.log(state.userData);
     await addLogHandler({
       type: "Product",
       message: `Product Updated: ${type} - ${value} (${name})`,
