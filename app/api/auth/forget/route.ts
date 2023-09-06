@@ -14,7 +14,7 @@ const transporter = nodemailer.createTransport({
 export async function POST(req: Request, res: Response) {
   try {
     const { email } = await req.json();
-    const user = await prismadb.user.findFirst({
+    const user = await prismadb.adminUser.findFirst({
       where: {
         email: email,
       },
@@ -26,14 +26,14 @@ export async function POST(req: Request, res: Response) {
     const resetToken = crypto.randomBytes(20).toString("hex");
     const tokenExpiry = new Date(Date.now() + 2 * 60 * 60 * 1000);
 
-    const findToken = await prismadb.resetToken.findUnique({
+    const findToken = await prismadb.resetTokenAdmin.findUnique({
       where: {
         userId: user.id,
       },
     });
 
     if (!findToken) {
-      await prismadb.resetToken.create({
+      await prismadb.resetTokenAdmin.create({
         data: {
           userId: user.id,
           token: resetToken,
@@ -41,12 +41,12 @@ export async function POST(req: Request, res: Response) {
         },
       });
     } else {
-      await prismadb.resetToken.delete({
+      await prismadb.resetTokenAdmin.delete({
         where: {
           id: findToken.id,
         },
       });
-      await prismadb.resetToken.create({
+      await prismadb.resetTokenAdmin.create({
         data: {
           userId: user.id,
           token: resetToken,
@@ -56,9 +56,9 @@ export async function POST(req: Request, res: Response) {
     }
 
     const mailOptions = {
-      from: "Ecommercely <krishwork11@gmail.com>",
+      from: "Ecommercely Admin <krishwork11@gmail.com>",
       to: email,
-      subject: "Password Reset - Ecommercely",
+      subject: "Password Reset - Ecommercely Admin",
       html: templateHandler(user.name, resetToken),
     };
 

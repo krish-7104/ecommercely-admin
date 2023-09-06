@@ -2,12 +2,9 @@ import { InitialState, Action } from "@/redux/types";
 
 const initialState: InitialState = {
   userData: {
-    message: "",
-    user: {
-      userId: "",
-      name: "",
-      email: "",
-    },
+    id: "",
+    name: "",
+    email: "",
   },
 };
 

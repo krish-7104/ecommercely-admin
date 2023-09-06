@@ -3,7 +3,7 @@ import jwt from "jsonwebtoken";
 import prismadb from "@/lib/prismadb";
 var bcrypt = require("bcryptjs");
 
-export async function POST(req: Request) {
+export async function POST(req: NextResponse) {
   try {
     const body = await req.json();
     const { email, password } = body;
@@ -34,12 +34,12 @@ export async function POST(req: Request) {
     const response = new NextResponse(
       JSON.stringify({ message: "Successfully logged in" })
     );
+    const expirationDate = new Date();
+    expirationDate.setDate(expirationDate.getDate() + 1);
 
-    response.headers.set(
-      "Set-Cookie",
-      `adminToken=${token}; HttpOnly; Path=/; Max-Age=86400`
-    );
-    // cookie will set for 1 day
+    response.cookies.set("adminToken", token, {
+      httpOnly: true,
+    });
 
     return response;
   } catch (error) {

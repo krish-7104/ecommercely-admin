@@ -386,11 +386,11 @@ const Home = () => {
           </div>
         </section>
         <section className="w-[92%] mx-auto my-10 flex justify-between items-center">
-          <section className="w-[40%] bg-white shadow-md border rounded-md flex justify-center items-center flex-col">
+          <section className="w-[45%] bg-white shadow-md border rounded-md flex justify-center items-center flex-col">
             <p className="font-semibold text-center mt-4 text-lg">
               Products in Each Category
             </p>
-            <div className="w-[80%] flex justify-center items-center">
+            <div className="w-full flex justify-center items-center">
               {productPieChartData &&
               productPieChartData.labels &&
               productPieChartData.labels.length !== 0 ? (
@@ -404,7 +404,7 @@ const Home = () => {
             <p className="font-semibold text-center mt-4 text-lg">
               Order Delivery Status
             </p>
-            <div className="w-[80%] flex justify-center items-center">
+            <div className="w-full flex justify-center items-center">
               {orderPieChartData &&
               orderPieChartData.labels &&
               orderPieChartData.labels.length !== 0 ? (

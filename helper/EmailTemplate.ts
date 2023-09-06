@@ -19,7 +19,8 @@ export const templateHandler = (name: string, token: string) => {
           }
           
           a {
-            color: #3869D4;
+            color: #ffffff;
+            text-decoration: none;
           }
           
           a img {

@@ -3,8 +3,9 @@ export type InitialState = {
 };
 
 export type User = {
-  message: string;
-  user: { userId: string; name: string; email: string };
+  id: string;
+  name: string;
+  email: string;
 };
 
 export type Action = {

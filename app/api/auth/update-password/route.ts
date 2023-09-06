@@ -1,15 +1,14 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import jwt from "jsonwebtoken";
 import prismadb from "@/lib/prismadb";
 var bcrypt = require("bcryptjs");
 
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-
     const { token, password } = body;
     const hashedPassword = await bcrypt.hash(password, 10);
-    const resetTokenRecord = await prismadb.resetToken.findFirst({
+    const resetTokenRecord = await prismadb.resetTokenAdmin.findFirst({
       where: {
         token: token,
         expiresAt: {
@@ -19,15 +18,21 @@ export async function POST(req: Request) {
     });
     if (resetTokenRecord) {
       const userId = resetTokenRecord.userId;
-
-      const updatedUser = await prismadb.user.update({
+      const user = await prismadb.adminUser.findUnique({
         where: { id: userId },
-        data: { password: hashedPassword },
       });
+      if (user) {
+        const updatedUser = await prismadb.adminUser.update({
+          where: { id: userId },
+          data: { password: hashedPassword },
+        });
 
-      await prismadb.resetToken.delete({
-        where: { id: resetTokenRecord.id },
-      });
+        await prismadb.resetTokenAdmin.delete({
+          where: { id: resetTokenRecord.id },
+        });
+      } else {
+        return new NextResponse("User Not Found", { status: 404 });
+      }
 
       return new NextResponse("Password Updated", { status: 200 });
     } else {

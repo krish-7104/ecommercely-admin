@@ -36,7 +36,13 @@ const Navbar = () => {
     const getUserTokenData = async () => {
       try {
         const resp = await axios.get("/api/auth/user");
-        dispatch(setUserHandler(resp.data));
+        dispatch(
+          setUserHandler({
+            id: resp.data.user.userId,
+            name: resp.data.user.name,
+            email: resp.data.user.email,
+          })
+        );
       } catch (error: any) {
         router.push("/login");
       }
@@ -146,8 +152,8 @@ const Navbar = () => {
               <PopoverTrigger>
                 <Avatar className="cursor-pointer shadow">
                   <AvatarFallback>
-                    {userData?.user?.name?.split(" ")[0]?.slice(0, 1)}
-                    {userData?.user?.name?.split(" ")[1]?.slice(0, 1)}
+                    {userData?.name?.split(" ")[0]?.slice(0, 1)}
+                    {userData?.name?.split(" ")[1]?.slice(0, 1)}
                   </AvatarFallback>
                 </Avatar>
               </PopoverTrigger>
