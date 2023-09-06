@@ -142,12 +142,7 @@ const Home = () => {
 
   const getUserTokenData = async () => {
     try {
-      const config = {
-        headers: {
-          "Cache-Control": "no-cache, no-store, max-age=0, must-revalidate",
-        },
-      };
-      const resp = await axios.get("/api/auth/user", config);
+      const resp = await axios.get("/api/auth/user");
       setUserData(resp.data.user);
     } catch (error: any) {
       router.push("/login");
@@ -325,18 +320,13 @@ const Home = () => {
   }, [mainData]);
 
   const getCardData = async () => {
-    const config = {
-      headers: {
-        "Cache-Control": "no-cache, no-store, max-age=0, must-revalidate",
-      },
-    };
     try {
       const [productResp, categoryResp, userResp, orderResp] =
         await Promise.all([
-          axios.get("/api/dashboard/card-data/products", config),
-          axios.get("/api/dashboard/card-data/category", config),
-          axios.get("/api/dashboard/card-data/user", config),
-          axios.get("/api/dashboard/card-data/orders", config),
+          axios.get("/api/dashboard/card-data/products"),
+          axios.get("/api/dashboard/card-data/category"),
+          axios.get("/api/dashboard/card-data/user"),
+          axios.get("/api/dashboard/card-data/orders"),
         ]);
 
       updateCardData("Products", productResp.data);

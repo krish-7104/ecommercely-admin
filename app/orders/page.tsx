@@ -32,14 +32,9 @@ const Product = () => {
   const [dataFetched, setDataFetched] = useState(false);
 
   const getOrderData = async (): Promise<void> => {
-    const config = {
-      headers: {
-        "Cache-Control": "no-cache, no-store, max-age=0, must-revalidate",
-      },
-    };
     toast.loading("Loading Data");
     try {
-      const resp = await axios.post("/api/order/getorders", config);
+      const resp = await axios.post("/api/order/getorders");
       setData(resp.data);
       setDataFetched(true);
       toast.dismiss();
