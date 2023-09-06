@@ -3,6 +3,7 @@ import { cookies } from "next/headers";
 import { verify } from "jsonwebtoken";
 
 export async function GET(req: Request) {
+  console.log(req.url);
   const cookieStore = cookies();
   const token = cookieStore.get("adminToken");
 
