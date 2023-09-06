@@ -16,11 +16,15 @@ type AdminType = {
 const Admin = () => {
   const [data, setData] = useState<AdminType[]>([]);
   const [dataFetched, setDataFetched] = useState(false);
-
+  const config = {
+    headers: {
+      "Cache-Control": "no-cache, no-store, max-age=0, must-revalidate",
+    },
+  };
   const getAdminData = async (): Promise<void> => {
     toast.loading("Loading Data");
     try {
-      const resp = await axios.post("/api/auth/getadmins");
+      const resp = await axios.post("/api/auth/getadmins", config);
       setData(resp.data);
       toast.dismiss();
     } catch (error: any) {

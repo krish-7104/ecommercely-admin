@@ -43,8 +43,13 @@ const Users = () => {
   const [dataFetched, setDataFetched] = useState(false);
   const [userData, setUserData] = useState<UserData[]>([]);
   const getUserData = async (): Promise<void> => {
+    const config = {
+      headers: {
+        "Cache-Control": "no-cache, no-store, max-age=0, must-revalidate",
+      },
+    };
     try {
-      const resp = await axios.post("/api/user/getUsers");
+      const resp = await axios.post("/api/user/getUsers", config);
       let formattedData: UserData[] = [];
       resp.data.forEach((item: UserData) => {
         let createdAtNew = new Date(item.createdAt);

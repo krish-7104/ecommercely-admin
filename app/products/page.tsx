@@ -19,9 +19,14 @@ const Product = () => {
   }, []);
 
   const getData = async (): Promise<void> => {
+    const config = {
+      headers: {
+        "Cache-Control": "no-cache, no-store, max-age=0, must-revalidate",
+      },
+    };
     toast.loading("Loading Data");
     try {
-      const resp = await axios.post("/api/product/getproducts");
+      const resp = await axios.post("/api/product/getproducts", config);
       setData(resp.data);
       setDataFetched(true);
       toast.dismiss();

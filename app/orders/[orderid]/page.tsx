@@ -54,7 +54,12 @@ const Order = () => {
   const [data, setData] = useState<OrderData>();
   useEffect(() => {
     const getOrderData = async () => {
-      const resp = await axios.get(`/api/order/${param.orderid}`);
+      const config = {
+        headers: {
+          "Cache-Control": "no-cache, no-store, max-age=0, must-revalidate",
+        },
+      };
+      const resp = await axios.get(`/api/order/${param.orderid}`, config);
       setData(resp.data);
     };
     getOrderData();

@@ -40,11 +40,15 @@ const Product = () => {
   const [categoryData, setCategoryData] = useState<CategoryData[]>([]);
   const [data, setData] = useState<FormateProduct[]>([]);
   const [dataFetched, setDataFetched] = useState(false);
-
+  const config = {
+    headers: {
+      "Cache-Control": "no-cache, no-store, max-age=0, must-revalidate",
+    },
+  };
   const getCategoryData = async (): Promise<void> => {
     toast.loading("Loading Data");
     try {
-      const resp = await axios.post("/api/category/getcategory");
+      const resp = await axios.post("/api/category/getcategory", config);
       setCategoryData(resp.data);
       getProductData(resp.data);
     } catch (error: any) {
@@ -64,7 +68,7 @@ const Product = () => {
     ]
   ): Promise<void> => {
     try {
-      const resp = await axios.post("/api/product/getproducts");
+      const resp = await axios.post("/api/product/getproducts", config);
       let formattedData: FormateProduct[] = [];
 
       for (let i = 0; i < categoryData.length; i++) {

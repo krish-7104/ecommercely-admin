@@ -14,7 +14,12 @@ type Log = {
 const Logs = () => {
   const [logs, setLogs] = useState<Log[]>([]);
   const getLogData = async () => {
-    const { data } = await axios.get("/api/logs/getlogs");
+    const config = {
+      headers: {
+        "Cache-Control": "no-cache, no-store, max-age=0, must-revalidate",
+      },
+    };
+    const { data } = await axios.get("/api/logs/getlogs", config);
     setLogs(data);
   };
   useEffect(() => {
