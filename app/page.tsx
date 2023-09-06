@@ -33,14 +33,6 @@ type User = {
   userId: string;
 };
 
-type DashCardData = {
-  title: string;
-  data: number;
-  type: string;
-  today: number;
-  percentage: number;
-};
-
 const dashCardDefaultData = [
   {
     title: "Orders",
@@ -97,7 +89,7 @@ const Home = () => {
     orders: [] as any[],
     users: [] as any[],
   });
-  const [pieChartData, setPieChartData] = useState<{
+  const [productPieChartData, setProductPieChart] = useState<{
     labels: string[];
     datasets: [
       {
@@ -108,6 +100,20 @@ const Home = () => {
           "rgba(255, 205, 86, 0.6)",
           "rgba(54, 162, 235, 0.6)",
           "rgba(153, 102, 255, 0.6)"
+        ];
+      }
+    ];
+  }>();
+
+  const [orderPieChartData, setOrderPieChart] = useState<{
+    labels: string[];
+    datasets: [
+      {
+        data: number[];
+        backgroundColor: [
+          "rgba(255, 99, 132, 0.6)",
+          "rgba(54, 162, 235, 0.6)",
+          "rgba(255, 205, 86, 0.6)"
         ];
       }
     ];
@@ -233,7 +239,7 @@ const Home = () => {
         mainData.products.filter((product) => product.category === category.id)
           .length
     );
-    setPieChartData({
+    setProductPieChart({
       labels: categoryLabels,
       datasets: [
         {
@@ -244,6 +250,34 @@ const Home = () => {
             "rgba(255, 205, 86, 0.6)",
             "rgba(54, 162, 235, 0.6)",
             "rgba(153, 102, 255, 0.6)",
+          ],
+        },
+      ],
+    });
+    const OrderLabels = ["Shipping", "Delivered", "Pending"];
+    const orderData = [
+      mainData.orders.reduce(
+        (sum, order) => sum + (order.status === "Shipping" ? 1 : 0),
+        0
+      ),
+      mainData.orders.reduce(
+        (sum, order) => sum + (order.status === "Delivered" ? 1 : 0),
+        0
+      ),
+      mainData.orders.reduce(
+        (sum, order) => sum + (order.status === "Pending" ? 1 : 0),
+        0
+      ),
+    ];
+    setOrderPieChart({
+      labels: OrderLabels,
+      datasets: [
+        {
+          data: orderData,
+          backgroundColor: [
+            "rgba(255, 99, 132, 0.6)",
+            "rgba(54, 162, 235, 0.6)",
+            "rgba(255, 205, 86, 0.6)",
           ],
         },
       ],
@@ -357,10 +391,10 @@ const Home = () => {
               Products in Each Category
             </p>
             <div className="w-[80%] flex justify-center items-center">
-              {pieChartData &&
-              pieChartData.labels &&
-              pieChartData.labels.length !== 0 ? (
-                <Pie data={pieChartData} />
+              {productPieChartData &&
+              productPieChartData.labels &&
+              productPieChartData.labels.length !== 0 ? (
+                <Pie data={productPieChartData} />
               ) : (
                 <p>No data available for the pie chart.</p>
               )}
@@ -368,13 +402,13 @@ const Home = () => {
           </section>
           <section className="w-[40%] bg-white shadow-md border rounded-md flex justify-center items-center flex-col">
             <p className="font-semibold text-center mt-4 text-lg">
-              Products in Each Category
+              Order Delivery Status
             </p>
             <div className="w-[80%] flex justify-center items-center">
-              {pieChartData &&
-              pieChartData.labels &&
-              pieChartData.labels.length !== 0 ? (
-                <Pie data={pieChartData} />
+              {orderPieChartData &&
+              orderPieChartData.labels &&
+              orderPieChartData.labels.length !== 0 ? (
+                <Pie data={orderPieChartData} />
               ) : (
                 <p>No data available for the pie chart.</p>
               )}

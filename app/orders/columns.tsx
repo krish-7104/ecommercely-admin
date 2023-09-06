@@ -115,6 +115,12 @@ export const columns: ColumnDef<FormateProduct>[] = [
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuItem
+              onClick={() => window.open(`orders/${row.original.id}`, "_self")}
+            >
+              View Order
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem
               onClick={() => {
                 navigator.clipboard.writeText(row.original.userId);
                 toast.success("User Id Copied");
@@ -129,12 +135,6 @@ export const columns: ColumnDef<FormateProduct>[] = [
               }}
             >
               Copy User Email
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem
-              onClick={() => window.open(`orders/${row.original.id}`, "_self")}
-            >
-              View Order
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

@@ -1,4 +1,5 @@
 "use client";
+import { Button } from "@/components/ui/button";
 import {
   Select,
   SelectContent,
@@ -9,8 +10,9 @@ import {
 import { addLogHandler } from "@/helper/AddLog";
 import { InitialState } from "@/redux/types";
 import axios from "axios";
+import { ChevronLeft } from "lucide-react";
 import Link from "next/link";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import React, { FormEvent, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useSelector } from "react-redux";
@@ -46,6 +48,7 @@ type OrderData = {
 };
 
 const Order = () => {
+  const router = useRouter();
   const param = useParams();
   const userData = useSelector((state: InitialState) => state.userData);
   const [data, setData] = useState<OrderData>();
@@ -81,6 +84,11 @@ const Order = () => {
   return (
     <main className="flex w-full justify-center items-center">
       <section className="container w-[80%] my-10">
+        <div className="my-2">
+          <Button onClick={() => router.back()} variant={"ghost"} size={"icon"}>
+            <ChevronLeft />
+          </Button>
+        </div>
         <p className="font-bold text-2xl  flex items-center mb-4">
           Order Details
         </p>
