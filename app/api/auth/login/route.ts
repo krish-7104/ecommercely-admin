@@ -1,9 +1,9 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import jwt from "jsonwebtoken";
 import prismadb from "@/lib/prismadb";
 var bcrypt = require("bcryptjs");
 
-export async function POST(req: NextResponse) {
+export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
     const { email, password } = body;
