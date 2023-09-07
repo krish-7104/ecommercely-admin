@@ -77,7 +77,7 @@ const UpdateProduct = () => {
       await addLogHandler({
         type: "Product",
         message: `Product Updated: ${values.product_name}`,
-        userId: userData.user.userId,
+        userId: userData.id,
       });
       toast.dismiss();
       toast.success("Product Updated");

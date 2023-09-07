@@ -60,7 +60,7 @@ const AddProduct = () => {
       await addLogHandler({
         type: "Product",
         message: `Product Added: ${values.product_name}`,
-        userId: userData.user.userId,
+        userId: userData.id,
       });
       toast.dismiss();
       toast.success("Product Added");

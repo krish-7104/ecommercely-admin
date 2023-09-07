@@ -36,7 +36,7 @@ const AddCategory = () => {
       const logResp = await addLogHandler({
         type: "Category",
         message: `Category Added: ${values.name}`,
-        userId: userData.user.userId,
+        userId: userData.id,
       });
       toast.dismiss();
       toast.success("Category Added");

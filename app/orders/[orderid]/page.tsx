@@ -70,7 +70,7 @@ const Order = () => {
       await addLogHandler({
         type: "Order",
         message: `Order Updated: Status - ${value} (${data?.id})`,
-        userId: userData.user.userId,
+        userId: userData.id,
       });
       toast.dismiss();
       toast.success("Status Updated");

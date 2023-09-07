@@ -1,6 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import dateFormaterHandler from "@/helper/DataFormatter";
 import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown, Copy } from "lucide-react";
 import { toast } from "react-hot-toast";
@@ -109,6 +110,9 @@ export const columns: ColumnDef<FormateProduct>[] | [] = [
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       );
+    },
+    cell: ({ row }) => {
+      return <p>{dateFormaterHandler(row.original.createdAt)}</p>;
     },
   },
   {

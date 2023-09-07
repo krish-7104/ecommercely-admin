@@ -45,40 +45,7 @@ const Users = () => {
   const getUserData = async (): Promise<void> => {
     try {
       const resp = await axios.post("/api/user/getUsers");
-      let formattedData: UserData[] = [];
-      resp.data.forEach((item: UserData) => {
-        let createdAtNew = new Date(item.createdAt);
-        let updatedAtNew = new Date(item.updatedAt);
-        let data: UserData = {
-          ...item,
-          createdAt: createdAtNew
-            .toLocaleString("en-US", {
-              timeZone: "Asia/Kolkata",
-              day: "numeric",
-              month: "numeric",
-              year: "numeric",
-              hour: "numeric",
-              minute: "numeric",
-              second: "numeric",
-              hour12: true,
-            })
-            .replace(" GMT+5:30", ""),
-          updatedAt: updatedAtNew
-            .toLocaleString("en-US", {
-              timeZone: "Asia/Kolkata",
-              day: "numeric",
-              month: "numeric",
-              year: "numeric",
-              hour: "numeric",
-              minute: "numeric",
-              second: "numeric",
-              hour12: true,
-            })
-            .replace(" GMT+5:30", ""),
-        };
-        formattedData.push(data);
-      });
-      setUserData(formattedData);
+      setUserData(resp.data);
       toast.dismiss();
     } catch (error: any) {
       setUserData([]);
