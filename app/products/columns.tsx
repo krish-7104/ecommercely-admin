@@ -42,7 +42,7 @@ const updateData = async (
     await addLogHandler({
       type: "Product",
       message: `Product Updated: ${type} - ${value} (${name})`,
-      userId: state.userData.user.userId,
+      userId: state.userData.id,
     });
     console.log(`Product Updated: ${type} - ${value} (${name})`);
     if (refreshTableCallback) {
