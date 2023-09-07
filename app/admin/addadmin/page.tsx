@@ -41,7 +41,7 @@ const AddAdmin = () => {
       await addLogHandler({
         type: "Admin",
         message: `Admin Added: ${values.name} (${values.email})`,
-        userId: userData.user.userId,
+        userId: userData.id,
       });
       toast.dismiss();
       toast.success("Admin Added Successfull");
