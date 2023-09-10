@@ -117,8 +117,6 @@ export const columns: ColumnDef<FormateProduct>[] = [
               Copy Category ID
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>Edit Category</DropdownMenuItem>
-            <DropdownMenuItem>Delete Category</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       );
