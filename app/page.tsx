@@ -385,7 +385,7 @@ const Home = () => {
             </BarChart>
           </div>
         </section>
-        <section className="w-[92%] mx-auto my-10 flex justify-between items-center">
+        <section className="w-[92%] mx-auto my-10 flex justify-between items-start">
           <section className="w-[45%] bg-white shadow-md border rounded-md flex justify-center items-center flex-col">
             <p className="font-semibold text-center mt-4 text-lg">
               Products in Each Category

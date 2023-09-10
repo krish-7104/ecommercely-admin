@@ -1,15 +1,11 @@
 import { NextResponse } from "next/server";
-
+import { cookies } from "next/headers";
 export async function GET(req: Request) {
   try {
     const response = new NextResponse("Logout successful");
-    response.headers.set(
-      "Set-Cookie",
-      `token=; HttpOnly; Path=/; Expires=${new Date(0).toUTCString()}`
-    );
+    cookies().delete("adminToken");
     return response;
   } catch (error) {
-    console.log(error);
     return new NextResponse("Internal Error", { status: 500 });
   }
 }
