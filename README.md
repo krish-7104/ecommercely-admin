@@ -33,6 +33,12 @@ Admin Panel for your Ecommerce website! With our sleek and efficient interface d
 
 https://ecommercely-admin.vercel.app/
 
+Test Credentials ->
+
+Email: test@admin.com
+
+Password: admin
+
 Also check the Ecommerce Website: https://github.com/krish-7104/ecommercely-website
 
 
