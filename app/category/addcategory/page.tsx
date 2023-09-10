@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -20,6 +20,16 @@ import { useSelector } from "react-redux";
 import { InitialState } from "@/redux/types";
 const AddCategory = () => {
   const userData = useSelector((state: InitialState) => state?.userData);
+  const [access, setAccess] = useState(false);
+  useEffect(() => {
+    if (userData.email === "test@admin.com") {
+      toast.dismiss();
+      toast.error("Access Denied!");
+      setAccess(false);
+    } else {
+      setAccess(true);
+    }
+  }, [userData]);
   const formSchema = z.object({
     name: z.string().nonempty(),
   });
@@ -49,34 +59,37 @@ const AddCategory = () => {
 
   return (
     <section className="relative flex justify-center items-center w-full mt-6">
-      <div className="w-[35%] py-5">
-        <p className="text-xl font-semibold text-center mb-6">
-          Add New Category
-        </p>
-        <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(onSubmit)}
-            className="space-y-3 flex justify-center flex-col"
-          >
-            <FormField
-              control={form.control}
-              name="name"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Category Name</FormLabel>
-                  <FormControl>
-                    <Input placeholder="" type="text" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+      {access && (
+        <div className="w-[35%] py-5">
+          <p className="text-xl font-semibold text-center mb-6">
+            Add New Category
+          </p>
+          <Form {...form}>
+            <form
+              onSubmit={form.handleSubmit(onSubmit)}
+              className="space-y-3 flex justify-center flex-col"
+            >
+              <FormField
+                control={form.control}
+                name="name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Category Name</FormLabel>
+                    <FormControl>
+                      <Input placeholder="" type="text" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-            <span className="mt-10 w-4"></span>
-            <Button type="submit">Add New Category</Button>
-          </form>
-        </Form>
-      </div>
+              <span className="mt-10 w-4"></span>
+              <Button type="submit">Add New Category</Button>
+            </form>
+          </Form>
+        </div>
+      )}
+      {!access && <p>You Don&apos;t Have Access To Add Admin.</p>}
     </section>
   );
 };

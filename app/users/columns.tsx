@@ -10,7 +10,6 @@ type FormateProduct = {
   id: string;
   name: string;
   email: string;
-  country: string;
   createdAt: string;
   carts: {
     products: { length: number };
@@ -81,20 +80,6 @@ export const columns: ColumnDef<FormateProduct>[] | [] = [
             : 0}{" "}
           Products
         </p>
-      );
-    },
-  },
-  {
-    accessorKey: "country",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Country
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
       );
     },
   },

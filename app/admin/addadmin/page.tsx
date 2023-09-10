@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -21,6 +21,16 @@ import { InitialState } from "@/redux/types";
 
 const AddAdmin = () => {
   const userData = useSelector((state: InitialState) => state?.userData);
+  const [access, setAccess] = useState(false);
+  useEffect(() => {
+    if (userData.email === "test@admin.com") {
+      toast.dismiss();
+      toast.error("Access Denied!");
+      setAccess(false);
+    } else {
+      setAccess(true);
+    }
+  }, [userData]);
   const formSchema = z.object({
     email: z.string().nonempty(),
     password: z.string().nonempty(),
@@ -52,62 +62,69 @@ const AddAdmin = () => {
   };
   return (
     <section className="relative flex justify-center items-center h-[90vh] w-full">
-      <div className="w-[35%] px-7 py-5">
-        <p className="text-xl font-semibold text-center mb-6">
-          Add User - Admin Panel
-        </p>
-        <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(onSubmit)}
-            className="space-y-3 flex justify-center flex-col"
-          >
-            <FormField
-              control={form.control}
-              name="name"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Name</FormLabel>
-                  <FormControl>
-                    <Input placeholder="John Wick" type="text" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Email Address</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="abc@admin.com"
-                      type="email"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="password"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Password</FormLabel>
-                  <FormControl>
-                    <Input placeholder="*********" type="password" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <Button type="submit">Add User</Button>
-          </form>
-        </Form>
-      </div>
+      {access && (
+        <div className="w-[35%] px-7 py-5">
+          <p className="text-xl font-semibold text-center mb-6">
+            Add User - Admin Panel
+          </p>
+          <Form {...form}>
+            <form
+              onSubmit={form.handleSubmit(onSubmit)}
+              className="space-y-3 flex justify-center flex-col"
+            >
+              <FormField
+                control={form.control}
+                name="name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Name</FormLabel>
+                    <FormControl>
+                      <Input placeholder="John Wick" type="text" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Email Address</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="abc@admin.com"
+                        type="email"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="password"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Password</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="*********"
+                        type="password"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <Button type="submit">Add User</Button>
+            </form>
+          </Form>
+        </div>
+      )}
+      {!access && <p>You Don&apos;t Have Access To Add Admin.</p>}
     </section>
   );
 };

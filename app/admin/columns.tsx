@@ -109,7 +109,7 @@ export const columns: ColumnDef<AdminType>[] = [
               Copy Admin ID
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>Delete Admin</DropdownMenuItem>
+            {/* <DropdownMenuItem>Delete Admin</DropdownMenuItem> */}
           </DropdownMenuContent>
         </DropdownMenu>
       );

@@ -18,6 +18,9 @@ import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import Link from "next/link";
 const Login = () => {
+  useEffect(() => {
+    toast.dismiss();
+  }, []);
   const router = useRouter();
   const formSchema = z.object({
     email: z.string().nonempty(),
