@@ -89,7 +89,7 @@ const AddCategory = () => {
           </Form>
         </div>
       )}
-      {!access && <p>You Don&apos;t Have Access To Add Admin.</p>}
+      {!access && <p>You Don&apos;t Have Access To Add Category.</p>}
     </section>
   );
 };
