@@ -1,7 +1,8 @@
 "use client";
+import PageTitle from "@/components/page-title";
 import dateFormaterHandler from "@/helper/DataFormatter";
 import axios from "axios";
-import { ActivitySquare } from "lucide-react";
+import { Activity } from "lucide-react";
 import React, { useEffect, useState } from "react";
 
 type Log = {
@@ -13,24 +14,25 @@ type Log = {
 
 const Logs = () => {
   const [logs, setLogs] = useState<Log[]>([]);
+
   const getLogData = async () => {
     const { data } = await axios.get("/api/logs/getlogs");
     setLogs(data);
   };
+
   useEffect(() => {
     getLogData();
   }, []);
+
   return (
-    <section className="w-full">
-      <section className="w-[92%] mx-auto my-6">
-        <p className="font-bold text-2xl mb-4 flex justify-start items-center">
-          <ActivitySquare className="mr-2" /> Changes Log
-        </p>
-        {logs &&
-          logs.map((item: any) => (
+    <section className="w-full mx-auto h-[100vh] overflow-y-scroll bg-[#f6f6f6]">
+      <div className="w-full">
+        <PageTitle title={"Log Changes"} icon={<Activity className="mr-2" />} />
+        <div className="mt-4">
+          {logs.map((item: Log) => (
             <div
               key={item.id}
-              className="bg-white rounded-md shadow-md border px-6 py-4 mb-4"
+              className="bg-white rounded-md shadow-md border px-6 py-4 mb-4 w-[92%] mx-auto"
             >
               <p className="text-xs float-right inline-block text-right font-semibold bg-green-400 px-3 py-1 rounded-full">
                 {item.type}
@@ -41,7 +43,8 @@ const Logs = () => {
               </p>
             </div>
           ))}
-      </section>
+        </div>
+      </div>
     </section>
   );
 };

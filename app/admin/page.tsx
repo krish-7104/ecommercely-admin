@@ -6,6 +6,8 @@ import { DataTable } from "./data-table";
 import { toast } from "react-hot-toast";
 import { useSelector } from "react-redux";
 import { InitialState } from "@/redux/types";
+import PageTitle from "@/components/page-title";
+import { UserCog } from "lucide-react";
 
 type AdminType = {
   id: string;
@@ -49,17 +51,20 @@ const Admin = () => {
     if (!dataFetched) {
       getAdminData();
     }
-  }, [dataFetched]);
+  }, [dataFetched, access]);
 
   return (
-    <div className="container mx-auto py-10">
-      {access && <DataTable columns={columns} data={data} />}
-      {!access && (
-        <p className="mt-10 text-center">
-          You Don&apos;t Have Access To This Page.
-        </p>
-      )}
-    </div>
+    <section className="w-full mx-auto h-[100vh] overflow-y-scroll bg-[#fff]">
+      <PageTitle title={"Admin"} icon={<UserCog className="mr-2" />} />
+      <div className="overflow-x-auto w-[96%] mx-auto my-4">
+        {access && <DataTable columns={columns} data={data} />}
+        {!access && (
+          <p className="mt-10 text-center">
+            You Don&apos;t Have Access To This Page.
+          </p>
+        )}
+      </div>
+    </section>
   );
 };
 

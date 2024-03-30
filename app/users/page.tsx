@@ -5,6 +5,8 @@ import { columns } from "./columns";
 import { DataTable } from "./data-table";
 import { useRouter } from "next/navigation";
 import { toast } from "react-hot-toast";
+import PageTitle from "@/components/page-title";
+import { Users2 } from "lucide-react";
 
 export type Products = {
   id: string;
@@ -62,12 +64,17 @@ const Users = () => {
   }, [dataFetched]);
 
   return (
-    <div className="container mx-auto py-10">
-      {userData.length !== 0 && userData && (
-        <DataTable columns={columns} data={userData} />
-      )}
-      {userData.length === 0 && <DataTable columns={columns} data={userData} />}
-    </div>
+    <section className="w-full mx-auto h-[100vh] overflow-y-scroll bg-[#fff]">
+      <PageTitle title={"Users"} icon={<Users2 className="mr-2" />} />
+      <div className="overflow-x-auto w-[96%] mx-auto my-4">
+        {userData.length !== 0 && userData && (
+          <DataTable columns={columns} data={userData} />
+        )}
+        {userData.length === 0 && (
+          <DataTable columns={columns} data={userData} />
+        )}
+      </div>
+    </section>
   );
 };
 

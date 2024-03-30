@@ -183,7 +183,12 @@ const Home = () => {
     } else if (title === "Gross Profit") {
       updatedCardData[index].data = data.totalProfit;
       updatedCardData[index].today = data.changesTodayProfit;
-      updatedCardData[index].percentage = data.percentageIncreaseProfit;
+      if (data.percentageIncreaseProfit > 100) {
+        updatedCardData[index].percentage = 100;
+      } else {
+        updatedCardData[index].percentage = data.percentageIncreaseProfit;
+      }
+
       updatedCardData[index].type =
         data.percentageIncreaseProfit === 0
           ? "neutral"
@@ -305,7 +310,7 @@ const Home = () => {
           <p className="font-semibold text-xl">
             {`${greet}, ${userData?.name || ""}`}
           </p>{" "}
-          <p className="text-sm mt-1 text-black/60">
+          <p className="text-sm mt-1 text-slate-500">
             Here what&lsquo;s happening with your store
           </p>
         </div>

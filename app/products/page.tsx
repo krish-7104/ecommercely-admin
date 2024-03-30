@@ -40,9 +40,9 @@ const Product = () => {
   }, [dataFetched]);
 
   return (
-    <div className="container mx-auto py-10">
+    <section className="w-full h-[100vh] overflow-y-scroll">
       <DataTable columns={columns} data={data} />
-    </div>
+    </section>
   );
 };
 
