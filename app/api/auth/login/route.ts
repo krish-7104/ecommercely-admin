@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import jwt from "jsonwebtoken";
+import { SignJWT } from "jose";
 import prismadb from "@/lib/prismadb";
 var bcrypt = require("bcryptjs");
 
@@ -23,13 +23,18 @@ export async function POST(req: NextRequest) {
       return new NextResponse("Invalid Credentials", { status: 401 });
     }
 
-    const token = jwt.sign(
-      { userId: user.id, name: user.name, email: email },
-      process.env.SECRET_KEY || "HELLOKEY",
-      {
-        expiresIn: "2h",
-      }
+    const secret = new TextEncoder().encode(
+      process.env.NEXT_PUBLIC_JWT_SECRET_KEY!
     );
+
+    const token = await new SignJWT({
+      userId: user.id,
+      name: user.name,
+      email: email,
+    })
+      .setProtectedHeader({ alg: "HS256" })
+      .setExpirationTime("2h")
+      .sign(secret);
 
     const response = new NextResponse(
       JSON.stringify({ message: "Successfully logged in" })
@@ -40,7 +45,6 @@ export async function POST(req: NextRequest) {
     response.cookies.set("adminToken", token, {
       httpOnly: true,
     });
-
     return response;
   } catch (error) {
     console.log(error);

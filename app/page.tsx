@@ -3,7 +3,17 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import DashCard from "./(dashboard)/DashCard";
-
+import {
+  Area,
+  AreaChart,
+  CartesianGrid,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from "recharts";
+import { useSelector } from "react-redux";
+import Loading from "./loading";
+import { Loader, Loader2, LoaderIcon } from "lucide-react";
 const GREETINGS = {
   morning: "Good Morning",
   afternoon: "Good Afternoon",
@@ -58,7 +68,7 @@ const Home = () => {
   const router = useRouter();
   const [greet, setGreeting] = useState(GREETINGS.morning);
   const [dashCardData, setDashCardData] = useState([...dashCardDefaultData]);
-  const [userData, setUserData] = useState<User | null>(null);
+  const userData = useSelector((state: any) => state?.userData);
   const [mainData, setMainData] = useState({
     products: [] as any[],
     category: [] as any[],
@@ -100,7 +110,6 @@ const Home = () => {
   >([]);
 
   useEffect(() => {
-    getUserTokenData();
     getCardData();
     getGreetText();
   }, []);
@@ -113,15 +122,6 @@ const Home = () => {
       setGreeting(GREETINGS.afternoon);
     } else {
       setGreeting(GREETINGS.evening);
-    }
-  };
-
-  const getUserTokenData = async () => {
-    try {
-      const resp = await axios.get("/api/auth/user");
-      setUserData(resp.data.user);
-    } catch (error: any) {
-      router.push("/login");
     }
   };
 
@@ -304,22 +304,88 @@ const Home = () => {
   };
 
   return (
-    <main className="w-[90%] mx-auto bg-[#f6f6f6] flex justify-center items-center max-h-[100vh]">
-      <section className="my-6 w-full">
-        <div className="w-full mb-4">
-          <p className="font-semibold text-xl">
-            {`${greet}, ${userData?.name || ""}`}
-          </p>{" "}
-          <p className="text-sm mt-1 text-slate-500">
-            Here what&lsquo;s happening with your store
+    <main className="mx-auto bg-[#f6f6f6] flex justify-center h-[100vh] overflow-y-scroll">
+      {userData && (
+        <section className="my-6 w-[92%]">
+          <div className="w-full mb-4">
+            <p className="font-semibold text-xl">
+              {`${greet}, ${userData?.name || ""}`}
+            </p>{" "}
+            <p className="text-sm mt-1 text-slate-500">
+              Here what&lsquo;s happening with your store
+            </p>
+          </div>
+          <div className="w-full flex justify-center items-center gap-4">
+            {dashCardData.map((card, index) => (
+              <DashCard key={index} data={card} />
+            ))}
+          </div>
+          <p className="mt-6 mb-2 text-lg font-medium text-gray-700">
+            Profit Every Month
           </p>
+          <div className="w-full flex flex-col justify-center items-center mb-6 bg-white p-4 rounded-xl shadow">
+            <AreaChart
+              width={850}
+              height={250}
+              data={analysisData}
+              margin={{ top: 10, right: 30, left: 18, bottom: 0 }}
+            >
+              <defs>
+                <linearGradient id="colorPv" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="5%" stopColor="#82ca9d" stopOpacity={0.8} />
+                  <stop offset="95%" stopColor="#82ca9d" stopOpacity={0} />
+                </linearGradient>
+              </defs>
+              <XAxis dataKey="name" fontSize={13} />
+              <YAxis fontSize={13} />
+              <CartesianGrid strokeDasharray="3 3" />
+              <Tooltip />
+              <Area
+                type="monotone"
+                dataKey="Profit"
+                stroke="#82ca9d"
+                fillOpacity={1}
+                fill="url(#colorPv)"
+              />
+            </AreaChart>
+          </div>
+          <p className="mt-6 mb-2 text-lg font-medium text-gray-700">
+            Order Stats
+          </p>
+          <div className="w-full flex flex-col justify-center items-center mb-6 bg-white p-4 rounded-xl shadow">
+            <AreaChart
+              width={850}
+              height={250}
+              data={analysisData}
+              margin={{ top: 10, right: 30, left: 18, bottom: 0 }}
+            >
+              <defs>
+                <linearGradient id="colorPv" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="5%" stopColor="#82ca9d" stopOpacity={0.8} />
+                  <stop offset="95%" stopColor="#82ca9d" stopOpacity={0} />
+                </linearGradient>
+              </defs>
+              <XAxis dataKey="name" fontSize={13} />
+              <YAxis fontSize={13} />
+              <CartesianGrid strokeDasharray="3 3" />
+              <Tooltip />
+              <Area
+                type="monotone"
+                dataKey="Profit"
+                stroke="#82ca9d"
+                fillOpacity={1}
+                fill="url(#colorPv)"
+              />
+            </AreaChart>
+          </div>
+        </section>
+      )}
+      {!userData && (
+        <div className="flex justify-center items-center flex-col">
+          <Loader2 className="animate-spin" />
+          <p className="mt-2 text-gray-700">Getting Things Ready!</p>
         </div>
-        <div className="w-full flex justify-center items-center gap-4">
-          {dashCardData.map((card, index) => (
-            <DashCard key={index} data={card} />
-          ))}
-        </div>
-      </section>
+      )}
     </main>
   );
 };

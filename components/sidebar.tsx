@@ -1,4 +1,6 @@
 "use client";
+import { setUserHandler } from "@/redux/actions";
+import axios from "axios";
 import {
   ActivityIcon,
   Home,
@@ -9,11 +11,27 @@ import {
   Users2,
 } from "lucide-react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import React from "react";
+import { usePathname, useRouter } from "next/navigation";
+import React, { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 
 const Sidebar = () => {
+  const router = useRouter();
+  const [userData, setUserData] = useState();
   const pathname = usePathname();
+  const dispatch = useDispatch();
+  useEffect(() => {
+    const getUserTokenData = async () => {
+      try {
+        const resp = await axios.get("/api/auth/user");
+        dispatch(setUserHandler(resp.data.user));
+      } catch (error: any) {
+        router.replace("/login");
+      }
+    };
+    getUserTokenData();
+  }, [dispatch, pathname, router]);
+
   const navbarMenu = [
     {
       id: 1,
