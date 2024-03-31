@@ -7,23 +7,20 @@ import {
   Area,
   AreaChart,
   CartesianGrid,
+  Cell,
+  Legend,
+  Pie,
+  PieChart,
   Tooltip,
   XAxis,
   YAxis,
 } from "recharts";
 import { useSelector } from "react-redux";
-import Loading from "./loading";
-import { Loader, Loader2, LoaderIcon } from "lucide-react";
+import { Loader2 } from "lucide-react";
 const GREETINGS = {
   morning: "Good Morning",
   afternoon: "Good Afternoon",
   evening: "Good Evening",
-};
-
-type User = {
-  name: string;
-  email: string;
-  userId: string;
 };
 
 const dashCardDefaultData = [
@@ -75,35 +72,8 @@ const Home = () => {
     orders: [] as any[],
     users: [] as any[],
   });
-  const [productPieChartData, setProductPieChart] = useState<{
-    labels: string[];
-    datasets: [
-      {
-        data: number[];
-        backgroundColor: [
-          "rgba(75, 192, 192, 0.6)",
-          "rgba(255, 99, 132, 0.6)",
-          "rgba(255, 205, 86, 0.6)",
-          "rgba(54, 162, 235, 0.6)",
-          "rgba(153, 102, 255, 0.6)"
-        ];
-      }
-    ];
-  }>();
-
-  const [orderPieChartData, setOrderPieChart] = useState<{
-    labels: string[];
-    datasets: [
-      {
-        data: number[];
-        backgroundColor: [
-          "rgba(255, 99, 132, 0.6)",
-          "rgba(54, 162, 235, 0.6)",
-          "rgba(255, 205, 86, 0.6)"
-        ];
-      }
-    ];
-  }>();
+  const [orderPieChart, setOrderPieChart] =
+    useState<{ name: string; value: number; color: string }[]>();
 
   const [analysisData, setAnalysisData] = useState<
     { name: string; Orders: any; Profit: any }[]
@@ -195,33 +165,18 @@ const Home = () => {
           : data.percentageIncreaseProfit > 0
           ? "positive"
           : "negative";
+    } else if (title === "Category") {
+      setMainData((prevMainData) => ({
+        ...prevMainData,
+        category: data.category,
+      }));
     }
     setDashCardData(updatedCardData);
   };
 
   useEffect(() => {
-    const categoryLabels = mainData.category.map((category) => category.name);
-    const categoryData = mainData.category.map(
-      (category) =>
-        mainData.products.filter((product) => product.category === category.id)
-          .length
-    );
-    setProductPieChart({
-      labels: categoryLabels,
-      datasets: [
-        {
-          data: categoryData,
-          backgroundColor: [
-            "rgba(75, 192, 192, 0.6)",
-            "rgba(255, 99, 132, 0.6)",
-            "rgba(255, 205, 86, 0.6)",
-            "rgba(54, 162, 235, 0.6)",
-            "rgba(153, 102, 255, 0.6)",
-          ],
-        },
-      ],
-    });
     const OrderLabels = ["Shipping", "Delivered", "Pending"];
+    const color = ["#8884d8", "#82ca9d", "#ffc658"];
     const orderData = [
       mainData.orders.reduce(
         (sum, order) => sum + (order.status === "Shipping" ? 1 : 0),
@@ -236,19 +191,14 @@ const Home = () => {
         0
       ),
     ];
-    setOrderPieChart({
-      labels: OrderLabels,
-      datasets: [
-        {
-          data: orderData,
-          backgroundColor: [
-            "rgba(255, 99, 132, 0.6)",
-            "rgba(54, 162, 235, 0.6)",
-            "rgba(255, 205, 86, 0.6)",
-          ],
-        },
-      ],
+    let orderDataForChart = OrderLabels.map((item, index) => {
+      return {
+        name: item,
+        value: orderData[index],
+        color: color[index],
+      };
     });
+    setOrderPieChart(orderDataForChart);
   }, [mainData]);
 
   useEffect(() => {
@@ -288,16 +238,19 @@ const Home = () => {
 
   const getCardData = async () => {
     try {
-      const [productResp, userResp, orderResp] = await Promise.all([
-        axios.get("/api/dashboard/card-data/products"),
-        axios.get("/api/dashboard/card-data/user"),
-        axios.get("/api/dashboard/card-data/orders"),
-      ]);
+      const [productResp, userResp, orderResp, categoryResp] =
+        await Promise.all([
+          axios.get("/api/dashboard/card-data/products"),
+          axios.get("/api/dashboard/card-data/user"),
+          axios.get("/api/dashboard/card-data/orders"),
+          axios.get("/api/dashboard/card-data/category"),
+        ]);
       updateCardData("Products", productResp.data);
       updateCardData("Stock", productResp.data);
       updateCardData("Users", userResp.data);
       updateCardData("Orders", orderResp.data);
       updateCardData("Gross Profit", orderResp.data);
+      updateCardData("Category", categoryResp.data);
     } catch (error) {
       router.push("/login");
     }
@@ -306,7 +259,7 @@ const Home = () => {
   return (
     <main className="mx-auto bg-[#f6f6f6] flex justify-center h-[100vh] overflow-y-scroll">
       {userData && (
-        <section className="my-6 w-[92%]">
+        <section className="mt-6 w-[92%]">
           <div className="w-full mb-4">
             <p className="font-semibold text-xl">
               {`${greet}, ${userData?.name || ""}`}
@@ -352,32 +305,25 @@ const Home = () => {
           <p className="mt-6 mb-2 text-lg font-medium text-gray-700">
             Order Stats
           </p>
-          <div className="w-full flex flex-col justify-center items-center mb-6 bg-white p-4 rounded-xl shadow">
-            <AreaChart
-              width={850}
-              height={250}
-              data={analysisData}
-              margin={{ top: 10, right: 30, left: 18, bottom: 0 }}
-            >
-              <defs>
-                <linearGradient id="colorPv" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#82ca9d" stopOpacity={0.8} />
-                  <stop offset="95%" stopColor="#82ca9d" stopOpacity={0} />
-                </linearGradient>
-              </defs>
-              <XAxis dataKey="name" fontSize={13} />
-              <YAxis fontSize={13} />
-              <CartesianGrid strokeDasharray="3 3" />
-              <Tooltip />
-              <Area
-                type="monotone"
-                dataKey="Profit"
-                stroke="#82ca9d"
-                fillOpacity={1}
-                fill="url(#colorPv)"
-              />
-            </AreaChart>
+          <div className="w-1/2 flex flex-col justify-center items-center mb-6 bg-white p-4 rounded-xl shadow">
+            <PieChart width={800} height={300}>
+              <Pie
+                data={orderPieChart}
+                dataKey="value"
+                nameKey="name"
+                cx="50%"
+                cy="50%"
+                outerRadius={110}
+              >
+                {orderPieChart?.map((data, index) => (
+                  <Cell key={`cell-${index}`} fill={data.color}></Cell>
+                ))}
+              </Pie>
+              <Tooltip cursor={{ stroke: "red", strokeWidth: 2 }} />
+              <Legend />
+            </PieChart>
           </div>
+          <div className="h-6 w-full"></div>
         </section>
       )}
       {!userData && (
