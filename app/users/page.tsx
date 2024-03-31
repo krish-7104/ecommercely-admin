@@ -64,9 +64,9 @@ const Users = () => {
   }, [dataFetched]);
 
   return (
-    <section className="w-full mx-auto h-[100vh] overflow-y-scroll bg-[#fff]">
+    <section className="w-full mx-auto h-[100vh] bg-[#fff]">
       <PageTitle title={"Users"} icon={<Users2 className="mr-2" />} />
-      <div className="overflow-x-auto w-[96%] mx-auto my-4">
+      <div className="overflow-x-auto w-[96%] mx-auto my-4 container">
         {userData.length !== 0 && userData && (
           <DataTable columns={columns} data={userData} />
         )}

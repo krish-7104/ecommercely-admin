@@ -32,9 +32,9 @@ const Logs = () => {
           {logs.map((item: Log) => (
             <div
               key={item.id}
-              className="bg-white rounded-md shadow-md border px-6 py-4 mb-4 w-[92%] mx-auto"
+              className="bg-white rounded-md border px-6 py-4 mb-4 w-[92%] mx-auto"
             >
-              <p className="text-xs float-right inline-block text-right font-semibold bg-green-400 px-3 py-1 rounded-full">
+              <p className="text-xs float-right inline-block text-right font-semibold bg-[#f6f6f6] px-3 py-1 rounded-full">
                 {item.type}
               </p>
               <p className="font-medium text-sm w-[90%]">{item.message}</p>

@@ -1,12 +1,12 @@
 "use client";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { columns } from "../orders/columns";
 import { DataTable } from "./data-table";
 import { useRouter } from "next/navigation";
 import { toast } from "react-hot-toast";
 import { Truck } from "lucide-react";
 import PageTitle from "@/components/page-title";
+import { columns } from "./columns";
 
 export type FormateProduct = {
   id: string;
@@ -54,10 +54,12 @@ const Product = () => {
   }, [dataFetched]);
 
   return (
-    <section className="w-full mx-auto h-[100vh] overflow-y-scroll bg-[#fff]">
+    <section className="w-full mx-auto h-[100vh] bg-[#fff]">
       <PageTitle title={"Orders"} icon={<Truck className="mr-2" />} />
-      <div className="overflow-x-auto w-[96%] mx-auto mt-4">
-        <DataTable columns={columns} data={data} />
+      <div className="overflow-x-hidden w-[96%] mx-auto my-4 container">
+        {data.length !== 0 && data && (
+          <DataTable columns={columns} data={data} />
+        )}
       </div>
     </section>
   );

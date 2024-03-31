@@ -257,7 +257,7 @@ const Home = () => {
   };
 
   return (
-    <main className="mx-auto bg-[#f6f6f6] flex justify-center h-[100vh] overflow-y-scroll">
+    <main className="mx-auto bg-[#f6f6f6] flex justify-center h-[100vh] container">
       {userData && (
         <section className="mt-6 w-[92%]">
           <div className="w-full mb-4">

@@ -34,7 +34,9 @@ export default function RootLayout({
           ) : (
             <main className="flex bg-[#f6f6f6]">
               <Sidebar />
-              <div className="h-[100vh] w-[80%] bg-[#f6f6f6]">{children}</div>
+              <div className="max-h-[100vh] w-[80%] bg-[#f6f6f6] overflow-y-scroll">
+                {children}
+              </div>
             </main>
           )}
           <Toaster position="bottom-right" />

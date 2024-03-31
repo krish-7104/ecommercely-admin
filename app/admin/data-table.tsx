@@ -58,7 +58,7 @@ export function DataTable<TData, TValue>({
   });
 
   return (
-    <div className="rounded-md border px-2">
+    <div className="rounded-md px-2">
       <div className="flex items-center py-4">
         <Input
           placeholder="Search Admin..."
