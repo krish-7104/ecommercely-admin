@@ -33,7 +33,7 @@ export async function POST(req: NextRequest) {
       email: email,
     })
       .setProtectedHeader({ alg: "HS256" })
-      .setExpirationTime("2h")
+      .setExpirationTime("7d")
       .sign(secret);
 
     const response = new NextResponse(

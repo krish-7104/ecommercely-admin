@@ -32,9 +32,9 @@ export default function RootLayout({
           pathname.includes("verify-token") ? (
             <main className="flex bg-[#f6f6f6]">{children}</main>
           ) : (
-            <main className="flex bg-[#f6f6f6]">
+            <main className="flex bg-[#f6f6f6] w-full">
               <Sidebar />
-              <div className="max-h-[100vh] w-[80%] bg-[#f6f6f6] overflow-y-scroll">
+              <div className="max-h-[100vh] w-[80%] bg-[#f6f6f6] overflow-y-auto">
                 {children}
               </div>
             </main>

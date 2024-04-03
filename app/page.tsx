@@ -74,6 +74,8 @@ const Home = () => {
   });
   const [orderPieChart, setOrderPieChart] =
     useState<{ name: string; value: number; color: string }[]>();
+  const [categoryPieChart, setCategoryPieChart] =
+    useState<{ name: string; value: number; color: string }[]>();
 
   const [analysisData, setAnalysisData] = useState<
     { name: string; Orders: any; Profit: any }[]
@@ -199,6 +201,27 @@ const Home = () => {
       };
     });
     setOrderPieChart(orderDataForChart);
+    const categoryColors = [
+      "rgba(75, 192, 192, 0.6)",
+      "rgba(255, 99, 132, 0.6)",
+      "rgba(255, 205, 86, 0.6)",
+      "rgba(54, 162, 235, 0.6)",
+      "rgba(153, 102, 255, 0.6)",
+    ];
+    const categoryLabels = mainData.category.map((category) => category.name);
+    const categoryData = mainData.category.map(
+      (category) =>
+        mainData.products.filter((product) => product.category === category.id)
+          .length
+    );
+    let categoryDataForChart = categoryLabels.map((item, index) => {
+      return {
+        name: item,
+        value: categoryData[index],
+        color: categoryColors[index],
+      };
+    });
+    setCategoryPieChart(categoryDataForChart);
   }, [mainData]);
 
   useEffect(() => {
@@ -251,6 +274,7 @@ const Home = () => {
       updateCardData("Orders", orderResp.data);
       updateCardData("Gross Profit", orderResp.data);
       updateCardData("Category", categoryResp.data);
+      console.log(categoryResp.data);
     } catch (error) {
       router.push("/login");
     }
@@ -303,26 +327,87 @@ const Home = () => {
             </AreaChart>
           </div>
           <p className="mt-6 mb-2 text-lg font-medium text-gray-700">
-            Order Stats
+            Orders Every Month
           </p>
-          <div className="w-1/2 flex flex-col justify-center items-center mb-6 bg-white p-4 rounded-xl shadow">
-            <PieChart width={800} height={300}>
-              <Pie
-                data={orderPieChart}
-                dataKey="value"
-                nameKey="name"
-                cx="50%"
-                cy="50%"
-                outerRadius={110}
-              >
-                {orderPieChart?.map((data, index) => (
-                  <Cell key={`cell-${index}`} fill={data.color}></Cell>
-                ))}
-              </Pie>
-              <Tooltip cursor={{ stroke: "red", strokeWidth: 2 }} />
-              <Legend />
-            </PieChart>
+          <div className="w-full flex flex-col justify-center items-center mb-6 bg-white p-4 rounded-xl shadow">
+            <AreaChart
+              width={850}
+              height={250}
+              data={analysisData}
+              margin={{ top: 10, right: 30, left: 18, bottom: 0 }}
+            >
+              <defs>
+                <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
+                  <stop
+                    offset="5%"
+                    color="#8884d8"
+                    stopColor="#8884d8"
+                    stopOpacity={0.8}
+                  />
+                  <stop offset="95%" stopColor="#8884d8" stopOpacity={0} />
+                </linearGradient>
+              </defs>
+              <XAxis dataKey="name" fontSize={13} />
+              <YAxis fontSize={13} />
+              <CartesianGrid strokeDasharray="3 3" />
+              <Tooltip />
+              <Area
+                type="monotone"
+                dataKey="Orders"
+                stroke="#8884d8"
+                fillOpacity={1}
+                fill="url(#colorUv)"
+              />
+            </AreaChart>
           </div>
+          <section className="w-full flex gap-x-10 justify-evenly items-center">
+            <div className="w-1/2">
+              <p className="mt-6 mb-2 text-lg font-medium text-gray-700">
+                Order Stats
+              </p>
+              <div className="w-full flex flex-col justify-center items-center mb-6 bg-white p-4 rounded-xl shadow">
+                <PieChart width={800} height={300}>
+                  <Pie
+                    data={orderPieChart}
+                    dataKey="value"
+                    nameKey="name"
+                    cx="50%"
+                    cy="50%"
+                    outerRadius={110}
+                  >
+                    {orderPieChart?.map((data, index) => (
+                      <Cell key={`cell-${index}`} fill={data.color}></Cell>
+                    ))}
+                  </Pie>
+                  <Tooltip />
+                  <Legend />
+                </PieChart>
+              </div>
+            </div>
+            <div className="w-1/2">
+              <p className="mt-6 mb-2 text-lg font-medium text-gray-700">
+                Category Wise Products
+              </p>
+              <div className="w-full flex flex-col justify-center items-center mb-6 bg-white p-4 rounded-xl shadow">
+                <PieChart width={800} height={300}>
+                  <Pie
+                    data={categoryPieChart}
+                    dataKey="value"
+                    nameKey="name"
+                    cx="50%"
+                    cy="50%"
+                    outerRadius={110}
+                  >
+                    {categoryPieChart?.map((data, index) => (
+                      <Cell key={`cell-${index}`} fill={data.color}></Cell>
+                    ))}
+                  </Pie>
+                  <Tooltip />
+                  {/* <Legend /> */}
+                </PieChart>
+              </div>
+            </div>
+          </section>
           <div className="h-6 w-full"></div>
         </section>
       )}

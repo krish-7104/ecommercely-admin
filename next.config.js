@@ -14,4 +14,8 @@ module.exports = {
             },
         ];
     },
+    images: {
+        domains: ["m.media-amazon.com"]
+    }
 };
+/** @type {import('next').NextConfig} */
