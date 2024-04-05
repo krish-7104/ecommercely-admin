@@ -15,7 +15,7 @@ module.exports = {
         ];
     },
     images: {
-        domains: ["m.media-amazon.com"]
+        domains: ["m.media-amazon.com", "res.cloudinary.com"]
     }
 };
 /** @type {import('next').NextConfig} */

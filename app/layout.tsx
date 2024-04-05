@@ -22,11 +22,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
-  console.log(pathname);
   return (
     <html lang="en">
       <Providers>
-        <body className={montserrat.className}>
+        <body className={[montserrat.className, "overflow-hidden"].join(" ")}>
           {pathname.includes("login") ||
           pathname.includes("reset-password") ||
           pathname.includes("verify-token") ? (

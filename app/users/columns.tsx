@@ -100,22 +100,4 @@ export const columns: ColumnDef<FormateProduct>[] | [] = [
       return <p>{dateFormaterHandler(row.original.createdAt)}</p>;
     },
   },
-  {
-    id: "actions",
-    cell: ({ row }) => {
-      const userId = row.original.id;
-      return (
-        <Button
-          variant="ghost"
-          className="h-8 w-8 p-0"
-          onClick={() => {
-            navigator.clipboard.writeText(userId);
-            toast.success("User Id Copied");
-          }}
-        >
-          <Copy className="h-4 w-4" />
-        </Button>
-      );
-    },
-  },
 ];

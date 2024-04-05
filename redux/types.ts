@@ -3,7 +3,7 @@ export type InitialState = {
 };
 
 export type User = {
-  id: string;
+  userId: string;
   name: string;
   email: string;
 };

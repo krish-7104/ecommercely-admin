@@ -202,11 +202,11 @@ const Home = () => {
     });
     setOrderPieChart(orderDataForChart);
     const categoryColors = [
-      "rgba(75, 192, 192, 0.6)",
-      "rgba(255, 99, 132, 0.6)",
-      "rgba(255, 205, 86, 0.6)",
-      "rgba(54, 162, 235, 0.6)",
-      "rgba(153, 102, 255, 0.6)",
+      "#82ca9d",
+      "rgba(255, 99, 132)",
+      "#ffc658",
+      "rgba(54, 162, 235)",
+      "#8884d8",
     ];
     const categoryLabels = mainData.category.map((category) => category.name);
     const categoryData = mainData.category.map(
@@ -274,20 +274,19 @@ const Home = () => {
       updateCardData("Orders", orderResp.data);
       updateCardData("Gross Profit", orderResp.data);
       updateCardData("Category", categoryResp.data);
-      console.log(categoryResp.data);
     } catch (error) {
       router.push("/login");
     }
   };
 
   return (
-    <main className="mx-auto bg-[#f6f6f6] flex justify-center h-[100vh] container">
+    <main className="mx-auto bg-[#f6f6f6] flex justify-center h-[100vh] container overflow-x-hidden">
       {userData && (
         <section className="mt-6 w-[92%]">
           <div className="w-full mb-4">
             <p className="font-semibold text-xl">
               {`${greet}, ${userData?.name || ""}`}
-            </p>{" "}
+            </p>
             <p className="text-sm mt-1 text-slate-500">
               Here what&lsquo;s happening with your store
             </p>
