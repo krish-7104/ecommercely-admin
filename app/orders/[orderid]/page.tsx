@@ -1,4 +1,5 @@
 "use client";
+import PageTitle from "@/components/page-title";
 import { Button } from "@/components/ui/button";
 import {
   Select,
@@ -10,7 +11,7 @@ import {
 import { addLogHandler } from "@/helper/AddLog";
 import { InitialState } from "@/redux/types";
 import axios from "axios";
-import { ChevronLeft } from "lucide-react";
+import { ChevronLeft, Truck } from "lucide-react";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import React, { FormEvent, useEffect, useState } from "react";
@@ -82,16 +83,17 @@ const Order = () => {
   };
 
   return (
-    <main className="flex w-full justify-center items-center">
-      <section className="container w-[80%] my-10">
-        <div className="my-2">
+    <main className="flex w-full justify-center items-center flex-col">
+      <PageTitle
+        title={"Order Details"}
+        icon={<Truck className="mr-2" />}
+        action={
           <Button onClick={() => router.back()} variant={"ghost"} size={"icon"}>
             <ChevronLeft />
           </Button>
-        </div>
-        <p className="font-bold text-2xl  flex items-center mb-4">
-          Order Details
-        </p>
+        }
+      />
+      <section className="w-[90%] my-10">
         {data && (
           <>
             <section className="flex justify-between items-start">
@@ -138,7 +140,10 @@ const Order = () => {
                 </Select>
               </div>
             </section>
-            <div className="border px-4 pb-2 my-4 rounded">
+            <p className="my-2 text-lg font-semibold border-t-2 pt-2">
+              Product Details
+            </p>
+            <section className="border px-4 pb-2 my-4 rounded">
               <div className="grid grid-cols-4 mt-4 mb-2 border-b pb-2">
                 <p className="col-span-2 font-medium">Product Name</p>
                 <p className="col-span-1 font-medium">Price</p>
@@ -170,7 +175,7 @@ const Order = () => {
                   {data.products.reduce((sum, b) => sum + b.quantity, 0)}
                 </p>
               </div>
-            </div>
+            </section>
           </>
         )}
       </section>

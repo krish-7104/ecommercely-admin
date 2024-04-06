@@ -1,9 +1,10 @@
 "use client";
-import { setUserHandler } from "@/redux/actions";
+import { removeUserHandler, setUserHandler } from "@/redux/actions";
 import axios from "axios";
 import {
   ActivityIcon,
   Home,
+  LogOut,
   Settings,
   ShoppingBag,
   Truck,
@@ -13,11 +14,11 @@ import {
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
 
 const Sidebar = () => {
   const router = useRouter();
-  const [userData, setUserData] = useState();
   const pathname = usePathname();
   const dispatch = useDispatch();
   useEffect(() => {
@@ -76,6 +77,21 @@ const Sidebar = () => {
       icon: <Settings className="mr-3" size={20} />,
     },
   ];
+
+  const logoutHandler = async () => {
+    toast.loading("Initiating Logout..");
+    try {
+      await axios.get("/api/auth/logout");
+      toast.dismiss();
+      dispatch(removeUserHandler());
+      router.replace("/login");
+      toast.success("Logout Successfull");
+    } catch (error: any) {
+      toast.dismiss();
+      toast.error(error.message);
+    }
+  };
+
   return (
     <main className="bg-[#15161b] w-[20%] h-[100vh] py-6 pl-4 pr-6 rounded-r-2xl">
       <div className="mt-2 mb-6">
@@ -100,6 +116,13 @@ const Sidebar = () => {
           );
         })}
       </ul>
+      <div
+        className={`my-3 py-2 px-2 w-full cursor-pointer rounded-md flex justify-start items-center hover:text-gray-200 text-gray-500 absolute bottom-1`}
+        onClick={logoutHandler}
+      >
+        <LogOut className="mr-3" size={20} />
+        Logout
+      </div>
     </main>
   );
 };

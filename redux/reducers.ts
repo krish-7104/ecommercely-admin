@@ -2,7 +2,7 @@ import { InitialState, Action } from "@/redux/types";
 
 const initialState: InitialState = {
   userData: {
-    id: "",
+    userId: "",
     name: "",
     email: "",
   },

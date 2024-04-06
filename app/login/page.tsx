@@ -42,8 +42,8 @@ const Login = () => {
       toast.success("Login Successfull");
     } catch (error: any) {
       toast.dismiss();
-      if (error.response.data === "Invalid Credentials")
-        toast.error(error.response.data);
+      console.log(error);
+      if (error.response.status === 401) toast.error(error.response.data);
       else toast.error("Uh oh! Something went wrong.");
     }
   };

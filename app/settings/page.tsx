@@ -3,11 +3,14 @@ import { Button } from "@/components/ui/button";
 import { InitialState } from "@/redux/types";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import toast from "react-hot-toast";
-import { Activity } from "lucide-react";
 import { useRouter } from "next/navigation";
 import dateFormaterHandler from "@/helper/DataFormatter";
+import PageTitle from "@/components/page-title";
+import { Settings as SettingIcon } from "lucide-react";
+import { removeUserHandler } from "@/redux/actions";
+
 const Settings = () => {
   const router = useRouter();
   const [user, setUser] = useState({
@@ -19,6 +22,7 @@ const Settings = () => {
   });
   const userData = useSelector((state: InitialState) => state.userData);
   const [access, setAccess] = useState(false);
+  const dispatch = useDispatch();
   useEffect(() => {
     if (userData.email === "test@admin.com") {
       toast.dismiss();
@@ -28,13 +32,14 @@ const Settings = () => {
       setAccess(true);
     }
   }, [userData]);
+
   useEffect(() => {
     const getUserData = async () => {
-      const { data } = await axios.get("/api/auth/profile/" + userData.id);
+      const { data } = await axios.get("/api/auth/profile/" + userData.userId);
       setUser(data.user);
     };
-    userData.id && getUserData();
-  }, [userData.id]);
+    userData.userId && getUserData();
+  }, [userData]);
 
   const resetPasswordHandler = async () => {
     toast.loading("Initiating Password Reset..");
@@ -52,7 +57,8 @@ const Settings = () => {
     try {
       await axios.get("/api/auth/logout");
       toast.dismiss();
-      router.replace("/");
+      dispatch(removeUserHandler());
+      router.replace("/login");
       toast.success("Logout Successfull");
     } catch (error: any) {
       toast.dismiss();
@@ -60,14 +66,11 @@ const Settings = () => {
     }
   };
   return (
-    <main className="flex w-full justify-center items-center">
+    <main className="flex w-full justify-center items-center flex-col">
+      <PageTitle title={"Settings"} icon={<SettingIcon className="mr-2" />} />
       {access && (
-        <section className="md:container w-[95%] md:w-[80%] my-10">
-          <h2 className="font-bold text-xl md:text-2xl justify-center md:justify-start flex items-center">
-            <Activity className="mr-2" />
-            Settings
-          </h2>
-          <section className="w-full mx-auto my-6">
+        <section className="w-[95%] my-4">
+          <section className="w-full mx-auto">
             {user.name !== "" && (
               <div className="p-4">
                 <div className="flex justify-between items-baseline">
@@ -85,10 +88,8 @@ const Settings = () => {
                     Updated On: {dateFormaterHandler(user.updatedAt)}
                   </p>
                 </div>
-
                 <div className="mt-6 flex justify-center items-start flex-col">
                   <Button
-                    variant={"secondary"}
                     size={"lg"}
                     className="mb-4"
                     onClick={resetPasswordHandler}
