@@ -108,7 +108,7 @@ const Sidebar = () => {
         pathname.includes("reset-password") ||
         pathname.includes("verify-token")
       ) && (
-        <main className="bg-[#15161b] w-[20%] h-[100vh] py-6 pl-4 pr-6 rounded-r-2xl">
+        <main className="bg-[#15161b] w-[20%] h-[100vh] py-6 pl-4 pr-6 rounded-r-2xl overflow-hidden">
           <div className="mt-2 mb-6">
             <p className="text-slate-200 text-lg font-semibold">
               Ecommercely Admin
@@ -132,7 +132,7 @@ const Sidebar = () => {
             })}
           </ul>
           <div
-            className={`my-3 py-2 px-2 w-full cursor-pointer rounded-md flex justify-start items-center hover:text-gray-200 text-gray-500 absolute bottom-1`}
+            className={`my-3 py-2 px-2 cursor-pointer rounded-md flex justify-start items-center hover:text-gray-200 text-gray-500 absolute bottom-1`}
             onClick={logoutHandler}
           >
             <LogOut className="mr-3" size={20} />
