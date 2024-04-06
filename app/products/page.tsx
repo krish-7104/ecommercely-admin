@@ -99,11 +99,11 @@ const Product = () => {
 
   return (
     <section className="w-full min-h-[100vh] bg-white">
-      <PageTitle
-        title={"Products"}
-        icon={<ShoppingBag className="mr-2" size={20} />}
-        action={
-          access && (
+      {access ? (
+        <PageTitle
+          title={"Products"}
+          icon={<ShoppingBag className="mr-2" size={20} />}
+          action={
             <div
               className="flex justify-center items-center cursor-pointer bg-[#e4e4e5] rounded-xl text-[#15161b] px-4 py-2 border-2 border-[#e4e4e5] hover:border-[#15161b]"
               onClick={() => navigate.push("/products/addproduct")}
@@ -111,9 +111,14 @@ const Product = () => {
               <Plus size={20} />
               <p className="ml-2 text-sm">Add Product</p>
             </div>
-          )
-        }
-      />
+          }
+        />
+      ) : (
+        <PageTitle
+          title={"Products"}
+          icon={<ShoppingBag className="mr-2" size={20} />}
+        />
+      )}
       <section className="w-[92%] mx-auto my-6">
         <ul className="bg-[#f6f6f6] rounded-lg p-3 grid grid-cols-7 mb-3 border border-black sticky top-20 z-20">
           <li className="font-medium text-center">Image</li>
