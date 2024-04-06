@@ -13,7 +13,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
 
@@ -27,7 +27,11 @@ const Sidebar = () => {
         const resp = await axios.get("/api/auth/user");
         dispatch(setUserHandler(resp.data.user));
       } catch (error: any) {
-        router.replace("/login");
+        !(
+          pathname.includes("login") ||
+          pathname.includes("reset-password") ||
+          pathname.includes("verify-token")
+        ) && router.replace("/login");
       }
     };
     getUserTokenData();
@@ -93,37 +97,45 @@ const Sidebar = () => {
   };
 
   return (
-    <main className="bg-[#15161b] w-[20%] h-[100vh] py-6 pl-4 pr-6 rounded-r-2xl">
-      <div className="mt-2 mb-6">
-        <p className="text-slate-200 text-lg font-semibold">
-          Ecommercely Admin
-        </p>
-      </div>
-      <ul className="">
-        {navbarMenu.map((item) => {
-          return (
-            <Link
-              href={item.route}
-              key={"menu" + item.id}
-              className={`my-3 py-2 px-2 w-full cursor-pointer rounded-md flex justify-start items-center ${
-                pathname === item.route
-                  ? "text-gray-100 bg-[#1e1f24]"
-                  : "hover:text-gray-200 text-gray-500"
-              }`}
-            >
-              {item.icon} {item.title}
-            </Link>
-          );
-        })}
-      </ul>
-      <div
-        className={`my-3 py-2 px-2 w-full cursor-pointer rounded-md flex justify-start items-center hover:text-gray-200 text-gray-500 absolute bottom-1`}
-        onClick={logoutHandler}
-      >
-        <LogOut className="mr-3" size={20} />
-        Logout
-      </div>
-    </main>
+    <>
+      {!(
+        pathname.includes("login") ||
+        pathname.includes("reset-password") ||
+        pathname.includes("verify-token")
+      ) && (
+        <main className="bg-[#15161b] w-[20%] h-[100vh] py-6 pl-4 pr-6 rounded-r-2xl">
+          <div className="mt-2 mb-6">
+            <p className="text-slate-200 text-lg font-semibold">
+              Ecommercely Admin
+            </p>
+          </div>
+          <ul className="">
+            {navbarMenu.map((item) => {
+              return (
+                <Link
+                  href={item.route}
+                  key={"menu" + item.id}
+                  className={`my-3 py-2 px-2 w-full cursor-pointer rounded-md flex justify-start items-center ${
+                    pathname === item.route
+                      ? "text-gray-100 bg-[#1e1f24]"
+                      : "hover:text-gray-200 text-gray-500"
+                  }`}
+                >
+                  {item.icon} {item.title}
+                </Link>
+              );
+            })}
+          </ul>
+          <div
+            className={`my-3 py-2 px-2 w-full cursor-pointer rounded-md flex justify-start items-center hover:text-gray-200 text-gray-500 absolute bottom-1`}
+            onClick={logoutHandler}
+          >
+            <LogOut className="mr-3" size={20} />
+            Logout
+          </div>
+        </main>
+      )}
+    </>
   );
 };
 

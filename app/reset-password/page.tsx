@@ -39,7 +39,7 @@ const ResetPassword = () => {
   };
   return (
     <section className="relative bg-[#f6f6f6] flex justify-center items-center h-[100vh] w-full">
-      <div className="md:container w-[90%] md:w-[35%] bg-white shadow-lg border rounded-md px-7 py-5">
+      <div className="md:container w-[90%] md:w-[40%] bg-white shadow-lg border rounded-md px-7 py-5">
         <p className="md:text-xl font-semibold text-center mb-6">
           Reset Password
         </p>

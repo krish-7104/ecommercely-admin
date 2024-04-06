@@ -60,7 +60,7 @@ const AddCategory = () => {
   return (
     <section className="relative flex justify-center items-center w-full mt-6">
       {access && (
-        <div className="w-[35%] py-5">
+        <div className="w-[40%] py-5">
           <p className="text-xl font-semibold text-center mb-6">
             Add New Category
           </p>
