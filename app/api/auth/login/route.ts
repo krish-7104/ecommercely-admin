@@ -16,7 +16,6 @@ export async function POST(req: NextRequest) {
       return new NextResponse("Invalid credentials", { status: 401 });
     }
 
-    // Compare hashed password
     const passwordMatch = await bcrypt.compare(password, user.password);
 
     if (!passwordMatch) {
@@ -37,14 +36,8 @@ export async function POST(req: NextRequest) {
       .sign(secret);
 
     const response = new NextResponse(
-      JSON.stringify({ message: "Successfully logged in" })
+      JSON.stringify({ message: "Successfully logged in", token })
     );
-    const expirationDate = new Date();
-    expirationDate.setDate(expirationDate.getDate() + 1);
-
-    response.cookies.set("adminToken", token, {
-      httpOnly: true,
-    });
     return response;
   } catch (error) {
     console.log(error);

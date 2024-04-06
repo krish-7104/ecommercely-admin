@@ -55,10 +55,10 @@ const Settings = () => {
   const logoutHandler = async () => {
     toast.loading("Initiating Logout..");
     try {
-      await axios.get("/api/auth/logout");
       toast.dismiss();
       dispatch(removeUserHandler());
       router.replace("/login");
+      localStorage.clear();
       toast.success("Logout Successfull");
     } catch (error: any) {
       toast.dismiss();

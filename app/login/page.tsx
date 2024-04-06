@@ -37,8 +37,9 @@ const Login = () => {
     toast.loading("Logging In...");
     try {
       const resp = await axios.post("/api/auth/login", values);
-      router.push("/");
+      localStorage.setItem("adminToken", resp.data.token);
       toast.dismiss();
+      router.push("/");
       toast.success("Login Successfull");
     } catch (error: any) {
       toast.dismiss();

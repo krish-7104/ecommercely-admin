@@ -1,16 +1,15 @@
 import { NextResponse } from "next/server";
-import { cookies } from "next/headers";
 import { verify } from "jsonwebtoken";
 
-export async function GET(req: Request) {
-  const cookieStore = cookies();
-  const token = cookieStore.get("adminToken");
-
+export async function POST(req: Request) {
+  const body = await req.json();
+  const { token } = body.data;
+  console.log(token);
   if (!token) {
     return new NextResponse("Unauthorized User", { status: 401 });
   }
   try {
-    const data = verify(token.value, process.env.SECRET_KEY || "");
+    const data = verify(token, process.env.SECRET_KEY || "");
     const response = new NextResponse(
       JSON.stringify({
         message: "Verified User",
@@ -19,10 +18,10 @@ export async function GET(req: Request) {
     );
     return response;
   } catch (error: any) {
-    cookieStore.delete("adminToken");
     if (error.message === "jwt expired") {
       return new NextResponse("Session Expired", { status: 401 });
     } else {
+      console.log(error);
       return new NextResponse("Internal Error", { status: 500 });
     }
   }

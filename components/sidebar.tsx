@@ -24,9 +24,14 @@ const Sidebar = () => {
   useEffect(() => {
     const getUserTokenData = async () => {
       try {
-        const resp = await axios.get("/api/auth/user");
+        const token = localStorage.getItem("adminToken");
+        if (!token) {
+          router.replace("/login");
+        }
+        const resp = await axios.post("/api/auth/user", { data: { token } });
         dispatch(setUserHandler(resp.data.user));
       } catch (error: any) {
+        localStorage.clear();
         !(
           pathname.includes("login") ||
           pathname.includes("reset-password") ||
@@ -85,10 +90,10 @@ const Sidebar = () => {
   const logoutHandler = async () => {
     toast.loading("Initiating Logout..");
     try {
-      await axios.get("/api/auth/logout");
       toast.dismiss();
       dispatch(removeUserHandler());
       router.replace("/login");
+      localStorage.clear();
       toast.success("Logout Successfull");
     } catch (error: any) {
       toast.dismiss();
