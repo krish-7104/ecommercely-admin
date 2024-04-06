@@ -5,6 +5,7 @@ export async function DELETE(
   req: Request,
   context: { params: { productid: string } }
 ) {
+  console.log(req.url);
   try {
     await prismadb.product.delete({
       where: { id: context.params.productid },

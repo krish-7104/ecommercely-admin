@@ -87,19 +87,31 @@ const Product = () => {
     }
   };
 
+  const [access, setAccess] = useState(false);
+  useEffect(() => {
+    if (userData.email === "test@admin.com") {
+      toast.dismiss();
+      setAccess(false);
+    } else {
+      setAccess(true);
+    }
+  }, [userData]);
+
   return (
     <section className="w-full min-h-[100vh] bg-white">
       <PageTitle
         title={"Products"}
         icon={<ShoppingBag className="mr-2" size={20} />}
         action={
-          <div
-            className="flex justify-center items-center cursor-pointer bg-[#e4e4e5] rounded-xl text-[#15161b] px-4 py-2 border-2 border-[#e4e4e5] hover:border-[#15161b]"
-            onClick={() => navigate.push("/products/addproduct")}
-          >
-            <Plus size={20} />
-            <p className="ml-2 text-sm">Add Product</p>
-          </div>
+          access && (
+            <div
+              className="flex justify-center items-center cursor-pointer bg-[#e4e4e5] rounded-xl text-[#15161b] px-4 py-2 border-2 border-[#e4e4e5] hover:border-[#15161b]"
+              onClick={() => navigate.push("/products/addproduct")}
+            >
+              <Plus size={20} />
+              <p className="ml-2 text-sm">Add Product</p>
+            </div>
+          )
         }
       />
       <section className="w-[92%] mx-auto my-6">

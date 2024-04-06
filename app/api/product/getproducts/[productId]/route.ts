@@ -5,6 +5,7 @@ export async function POST(
   req: Request,
   context: { params: { productId: string } }
 ) {
+  console.log(req.url);
   try {
     const product = await prismadb.product.findUnique({
       where: { id: context.params.productId },

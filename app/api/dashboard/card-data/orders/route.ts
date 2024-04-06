@@ -4,6 +4,7 @@ import { differenceInDays, subDays, startOfDay } from "date-fns";
 
 export async function GET(req: Request) {
   try {
+    console.log(req.url);
     const orders = await prismadb.order.findMany();
     const totalOrders = orders.length;
     const totalProfit = orders.reduce(

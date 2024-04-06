@@ -5,6 +5,7 @@ export async function PUT(
   req: Request,
   context: { params: { orderid: string } }
 ) {
+  console.log(req.url);
   try {
     const body = await req.json();
     const order = await prismadb.order.update({

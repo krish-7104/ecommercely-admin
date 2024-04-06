@@ -245,9 +245,14 @@ const Home = () => {
 
     mainData.orders.forEach((order) => {
       const orderDate = new Date(order.createdAt);
-      const monthIndex = orderDate.getMonth();
-      monthlyOrderData[monthIndex]++;
-      monthlyProfitData[monthIndex] += order.total;
+      const orderYear = orderDate.getFullYear(); // Get the year of the order
+      const currentYear = new Date().getFullYear(); // Get the current year
+      if (orderYear === currentYear) {
+        // Check if the order's year matches the current year
+        const monthIndex = orderDate.getMonth();
+        monthlyOrderData[monthIndex]++;
+        monthlyProfitData[monthIndex] += order.total;
+      }
     });
 
     const analysisData = months.map((month, index) => ({
@@ -297,7 +302,7 @@ const Home = () => {
             ))}
           </div>
           <p className="mt-6 mb-2 text-lg font-medium text-gray-700">
-            Profit Every Month
+            Profit Every Month (2024)
           </p>
           <div className="w-full flex flex-col justify-center items-center mb-6 bg-white p-4 rounded-xl shadow">
             <AreaChart
@@ -326,7 +331,7 @@ const Home = () => {
             </AreaChart>
           </div>
           <p className="mt-6 mb-2 text-lg font-medium text-gray-700">
-            Orders Every Month
+            Orders Every Month (2024)
           </p>
           <div className="w-full flex flex-col justify-center items-center mb-6 bg-white p-4 rounded-xl shadow">
             <AreaChart
