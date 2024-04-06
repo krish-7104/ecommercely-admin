@@ -94,7 +94,7 @@ const Product = () => {
         icon={<ShoppingBag className="mr-2" size={20} />}
         action={
           <div
-            className="flex justify-center items-center cursor-pointer bg-[#e4e4e5] rounded-xl text-[#15161b] px-4 py-2 border-2 hover:border-[#15161b]"
+            className="flex justify-center items-center cursor-pointer bg-[#e4e4e5] rounded-xl text-[#15161b] px-4 py-2 border-2 border-[#e4e4e5] hover:border-[#15161b]"
             onClick={() => navigate.push("/products/addproduct")}
           >
             <Plus size={20} />
