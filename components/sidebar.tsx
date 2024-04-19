@@ -39,7 +39,11 @@ const Sidebar = () => {
         ) && router.replace("/login");
       }
     };
-    getUserTokenData();
+    !(
+      pathname.includes("login") ||
+      pathname.includes("reset-password") ||
+      pathname.includes("verify-token")
+    ) && getUserTokenData();
   }, [dispatch, pathname, router]);
 
   const navbarMenu = [
