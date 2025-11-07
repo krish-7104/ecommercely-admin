@@ -1,8 +1,10 @@
 import prismadb from "@/lib/prismadb";
 import { NextResponse } from "next/server";
+import { Prisma } from "@prisma/client";
+
 export async function POST(req: Request) {
   try {
-    const body = await req.json();
+    const body = await req.json() as Prisma.CategoryCreateInput;
     const { name } = body;
     const category = await prismadb.category.findUnique({ where: { name } });
     if (!category) {

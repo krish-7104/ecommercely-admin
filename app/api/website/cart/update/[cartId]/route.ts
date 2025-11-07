@@ -1,11 +1,12 @@
 import prismadb from "@/lib/prismadb";
 import { NextResponse } from "next/server";
+import { Prisma } from "@prisma/client";
 
 export async function POST(
   req: Request,
   context: { params: { cartId: string } }
 ) {
-  const body = await req.json();
+  const body = await req.json() as Prisma.CartUpdateInput;
   try {
     const cart = await prismadb.cart.update({
       where: {

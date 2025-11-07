@@ -1,9 +1,10 @@
 import { NextResponse } from "next/server";
 import prismadb from "@/lib/prismadb";
+import { Prisma } from "@prisma/client";
 
 export async function POST(req: Request) {
   try {
-    const body = await req.json();
+    const body = await req.json() as Prisma.CartCreateInput;
     const data = await prismadb.cart.create({
       data: body,
     });

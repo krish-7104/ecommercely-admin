@@ -4,7 +4,7 @@ import { differenceInDays, subDays, startOfDay } from "date-fns";
 
 export async function GET(req: Request) {
   try {
-    console.log(req.url);
+    
     const users = await prismadb.user.findMany();
     const totalUser = users.length;
     const today = startOfDay(new Date());

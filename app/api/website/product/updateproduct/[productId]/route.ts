@@ -1,12 +1,17 @@
 import prismadb from "@/lib/prismadb";
 import { NextResponse } from "next/server";
 
+interface UpdateQuantityBody {
+  type: "inc" | "dec";
+  quantity: number;
+}
+
 export async function POST(
   req: Request,
   context: { params: { productId: string } }
 ) {
-  console.log(req.url);
-  const body = await req.json();
+  
+  const body = await req.json() as UpdateQuantityBody;
   try {
     const product = await prismadb.product.findUnique({
       where: { id: context.params.productId },

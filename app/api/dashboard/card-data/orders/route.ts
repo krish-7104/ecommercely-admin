@@ -2,13 +2,15 @@ import prismadb from "@/lib/prismadb";
 import { NextResponse } from "next/server";
 import { differenceInDays, subDays, startOfDay } from "date-fns";
 
+type Order = Awaited<ReturnType<typeof prismadb.order.findMany>>[0];
+
 export async function GET(req: Request) {
   try {
-    console.log(req.url);
+    
     const orders = await prismadb.order.findMany();
     const totalOrders = orders.length;
     const totalProfit = orders.reduce(
-      (sum: number, item: any) => sum + item.total,
+      (sum: number, item: Order) => sum + item.total,
       0
     );
 
@@ -16,12 +18,12 @@ export async function GET(req: Request) {
     const yesterday = subDays(today, 1);
 
     const changesTodayOrder = orders.filter(
-      (item) =>
+      (item: Order) =>
         differenceInDays(today, startOfDay(new Date(item.createdAt))) === 0
     ).length;
 
     const changesYesterdayOrder = orders.filter(
-      (item) =>
+      (item: Order) =>
         differenceInDays(yesterday, startOfDay(new Date(item.createdAt))) === 0
     ).length;
 
@@ -34,18 +36,18 @@ export async function GET(req: Request) {
 
     const changesTodayProfit = orders
       .filter(
-        (item) =>
+        (item: Order) =>
           differenceInDays(today, startOfDay(new Date(item.createdAt))) === 0
       )
-      .reduce((sum, item) => sum + item.total, 0);
+      .reduce((sum: number, item: Order) => sum + item.total, 0);
 
     const changesYesterdayProfit = orders
       .filter(
-        (item) =>
+        (item: Order) =>
           differenceInDays(yesterday, startOfDay(new Date(item.createdAt))) ===
           0
       )
-      .reduce((sum, item) => sum + item.total, 0);
+      .reduce((sum: number, item: Order) => sum + item.total, 0);
 
     const percentageIncreaseProfit =
       changesYesterdayProfit !== 0

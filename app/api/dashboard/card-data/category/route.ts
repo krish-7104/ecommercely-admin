@@ -2,16 +2,18 @@ import prismadb from "@/lib/prismadb";
 import { NextResponse } from "next/server";
 import { differenceInDays, subDays, startOfDay } from "date-fns";
 
+type Category = Awaited<ReturnType<typeof prismadb.category.findMany>>[0];
+
 export async function GET(req: Request) {
   try {
-    console.log(req.url);
+    
     const category = await prismadb.category.findMany();
     const totalCategory = category.length;
     const today = startOfDay(new Date());
     const yesterday = subDays(today, 1);
 
     const changesToday = category.filter(
-      (item) =>
+      (item: Category) =>
         differenceInDays(
           today,
           startOfDay(
@@ -32,7 +34,7 @@ export async function GET(req: Request) {
     ).length;
 
     const changesYesterday = category.filter(
-      (item) =>
+      (item: Category) =>
         differenceInDays(
           yesterday,
           startOfDay(

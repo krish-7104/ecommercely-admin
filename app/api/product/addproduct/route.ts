@@ -1,9 +1,11 @@
 import prismadb from "@/lib/prismadb";
 import { NextResponse } from "next/server";
+import { Prisma } from "@prisma/client";
+
 export async function POST(req: Request) {
-  console.log(req.url);
+  
   try {
-    const body = await req.json();
+    const body = await req.json() as Prisma.ProductCreateInput;
     const {
       product_name,
       product_description,

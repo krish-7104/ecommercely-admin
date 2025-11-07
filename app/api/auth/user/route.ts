@@ -1,8 +1,14 @@
 import { NextResponse } from "next/server";
 import { verify } from "jsonwebtoken";
 
+interface UserBody {
+  data: {
+    token: string;
+  };
+}
+
 export async function POST(req: Request) {
-  const body = await req.json();
+  const body = await req.json() as UserBody;
   const { token } = body.data;
   console.log(token);
   if (!token) {
@@ -17,8 +23,8 @@ export async function POST(req: Request) {
       })
     );
     return response;
-  } catch (error: any) {
-    if (error.message === "jwt expired") {
+  } catch (error) {
+    if (error instanceof Error && error.message === "jwt expired") {
       return new NextResponse("Session Expired", { status: 401 });
     } else {
       console.log(error);

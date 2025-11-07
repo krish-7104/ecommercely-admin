@@ -6,7 +6,7 @@ export async function POST(
   context: { params: { logid: string } }
 ) {
   try {
-    console.log(req.url);
+    
     await prismadb.logs.delete({
       where: { id: context.params.logid },
     });

@@ -2,9 +2,14 @@ import { NextRequest, NextResponse } from "next/server";
 import prismadb from "@/lib/prismadb";
 var bcrypt = require("bcryptjs");
 
+interface UpdatePasswordBody {
+  token: string;
+  password: string;
+}
+
 export async function POST(req: NextRequest) {
   try {
-    const body = await req.json();
+    const body = await req.json() as UpdatePasswordBody;
     const { token, password } = body;
     const hashedPassword = await bcrypt.hash(password, 10);
     const resetTokenRecord = await prismadb.resetTokenAdmin.findFirst({

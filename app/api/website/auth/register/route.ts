@@ -2,11 +2,18 @@ import jwt from "jsonwebtoken";
 import { NextResponse } from "next/server";
 import prismadb from "@/lib/prismadb";
 import { getCookieString } from "@/lib/cookie-helper";
+import { Prisma } from "@prisma/client";
 var bcrypt = require("bcryptjs");
+
+interface RegisterBody {
+  email: string;
+  password: string;
+  name: string;
+}
 
 export async function POST(req: Request) {
   try {
-    const body = await req.json();
+    const body = await req.json() as RegisterBody;
     const { email, password, name } = body;
     
     const user = await prismadb.user.findUnique({

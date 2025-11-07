@@ -1,8 +1,13 @@
 import prismadb from "@/lib/prismadb";
 import { NextResponse } from "next/server";
+
+interface GetProfileBody {
+  id: string;
+}
+
 export async function POST(req: Request) {
   try {
-    const { id } = await req.json();
+    const { id } = await req.json() as GetProfileBody;
     const user = await prismadb.user.findUnique({
       where: {
         id,

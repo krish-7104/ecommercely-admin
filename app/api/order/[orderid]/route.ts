@@ -6,7 +6,7 @@ export async function GET(
   context: { params: { orderid: string } }
 ) {
   try {
-    console.log(req.url);
+    
     const order = await prismadb.order.findUnique({
       where: { id: context.params.orderid },
       include: {

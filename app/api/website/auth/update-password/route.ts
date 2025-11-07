@@ -3,9 +3,14 @@ import jwt from "jsonwebtoken";
 import prismadb from "@/lib/prismadb";
 var bcrypt = require("bcryptjs");
 
+interface UpdatePasswordBody {
+  token: string;
+  password: string;
+}
+
 export async function POST(req: Request) {
   try {
-    const body = await req.json();
+    const body = await req.json() as UpdatePasswordBody;
 
     const { token, password } = body;
     const hashedPassword = await bcrypt.hash(password, 10);

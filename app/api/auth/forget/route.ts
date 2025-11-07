@@ -11,9 +11,13 @@ const transporter = nodemailer.createTransport({
   },
 });
 
+interface ForgetPasswordBody {
+  email: string;
+}
+
 export async function POST(req: Request, res: Response) {
   try {
-    const { email } = await req.json();
+    const { email } = await req.json() as ForgetPasswordBody;
     const user = await prismadb.adminUser.findFirst({
       where: {
         email: email,

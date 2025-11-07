@@ -1,9 +1,13 @@
 import prismadb from "@/lib/prismadb";
 import { NextResponse } from "next/server";
 
+interface GetOrderBody {
+  userId: string;
+}
+
 export async function POST(req: Request) {
   try {
-    const { userId } = await req.json();
+    const { userId } = await req.json() as GetOrderBody;
     const order = await prismadb.order.findMany({
       where: {
         userId,

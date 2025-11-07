@@ -25,10 +25,10 @@ export async function GET(
         { status: 404 }
       );
     }
-  } catch (error: any) {
+  } catch (error) {
     return NextResponse.json(
       {
-        message: error.message,
+        message: error instanceof Error ? error.message : "Internal Error",
       },
       { status: 500 }
     );

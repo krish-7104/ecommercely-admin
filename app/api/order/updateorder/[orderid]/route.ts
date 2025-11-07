@@ -1,13 +1,14 @@
 import prismadb from "@/lib/prismadb";
 import { NextResponse } from "next/server";
+import { Prisma } from "@prisma/client";
 
 export async function PUT(
   req: Request,
   context: { params: { orderid: string } }
 ) {
-  console.log(req.url);
+  
   try {
-    const body = await req.json();
+    const body = await req.json() as Prisma.OrderUpdateInput;
     const order = await prismadb.order.update({
       where: { id: context.params.orderid },
       data: { ...body },
