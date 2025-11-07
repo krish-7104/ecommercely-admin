@@ -3,6 +3,7 @@ import { removeUserHandler, setUserHandler } from "@/redux/actions";
 import axios from "axios";
 import {
   ActivityIcon,
+  Folder,
   Home,
   LogOut,
   Settings,
@@ -61,30 +62,36 @@ const Sidebar = () => {
     },
     {
       id: 3,
+      title: "Category",
+      route: "/category",
+      icon: <Folder className="mr-3" size={20} />,
+    },
+    {
+      id: 4,
       title: "Orders",
       route: "/orders",
       icon: <Truck className="mr-3" size={20} />,
     },
     {
-      id: 4,
+      id: 5,
       title: "Users",
       route: "/users",
       icon: <Users2 className="mr-3" size={20} />,
     },
     {
-      id: 5,
+      id: 6,
       title: "Admin",
       route: "/admin",
       icon: <UserCog className="mr-3" size={20} />,
     },
     {
-      id: 6,
+      id: 7,
       title: "Logs",
       route: "/logs",
       icon: <ActivityIcon className="mr-3" size={20} />,
     },
     {
-      id: 7,
+      id: 8,
       title: "Settings",
       route: "/settings",
       icon: <Settings className="mr-3" size={20} />,

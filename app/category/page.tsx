@@ -5,6 +5,10 @@ import { columns } from "./columns";
 import { DataTable } from "./data-table";
 import { useRouter } from "next/navigation";
 import { toast } from "react-hot-toast";
+import PageTitle from "@/components/page-title";
+import { Folder, Plus } from "lucide-react";
+import { useSelector } from "react-redux";
+import { InitialState } from "@/redux/types";
 
 type Product = {
   id: string;
@@ -40,6 +44,8 @@ const Product = () => {
   const [categoryData, setCategoryData] = useState<CategoryData[]>([]);
   const [data, setData] = useState<FormateProduct[]>([]);
   const [dataFetched, setDataFetched] = useState(false);
+  const userData = useSelector((state: InitialState) => state?.userData);
+  const [access, setAccess] = useState(false);
 
   const getCategoryData = async (): Promise<void> => {
     toast.loading("Loading Data");
@@ -122,10 +128,40 @@ const Product = () => {
     }
   }, [dataFetched]);
 
+  useEffect(() => {
+    if (userData.email === "test@admin.com") {
+      setAccess(false);
+    } else {
+      setAccess(true);
+    }
+  }, [userData]);
+
   return (
-    <div className="container mx-auto py-10">
-      <DataTable columns={columns} data={data} />
-    </div>
+    <section className="w-full min-h-[100vh] bg-white">
+      {access ? (
+        <PageTitle
+          title={"Category"}
+          icon={<Folder className="mr-2" size={20} />}
+          action={
+            <div
+              className="flex justify-center items-center cursor-pointer bg-[#e4e4e5] rounded-xl text-[#15161b] px-4 py-2 border-2 border-[#e4e4e5] hover:border-[#15161b]"
+              onClick={() => navigate.push("/category/addcategory")}
+            >
+              <Plus size={20} />
+              <p className="ml-2 text-sm">Add Category</p>
+            </div>
+          }
+        />
+      ) : (
+        <PageTitle
+          title={"Category"}
+          icon={<Folder className="mr-2" size={20} />}
+        />
+      )}
+      <div className="container mx-auto py-10">
+        <DataTable columns={columns} data={data} />
+      </div>
+    </section>
   );
 };
 

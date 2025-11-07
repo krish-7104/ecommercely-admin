@@ -8,7 +8,7 @@ export async function POST(req: Request) {
   try {
     const body = await req.json();
     const { email, password, name } = body;
-
+    
     const user = await prismadb.user.findUnique({
       where: { email },
     });
