@@ -23,7 +23,7 @@ export async function POST(req: NextRequest) {
     }
 
     const secret = new TextEncoder().encode(
-      process.env.NEXT_PUBLIC_JWT_SECRET_KEY!
+      process.env.SECRET_KEY!
     );
 
     const token = await new SignJWT({
