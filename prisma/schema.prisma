@@ -70,14 +70,16 @@ model Cart {
 }
 
 model Order {
-  id        String   @id @default(uuid())
-  userId    String
-  total     Int
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  products  Json
-  status    String   @default("Pending")
-  user      User     @relation(fields: [userId], references: [id])
+  id              String   @id @default(uuid())
+  userId          String
+  total           Int
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  products        Json
+  status          String   @default("Pending")
+  paymentIntentId String?
+  paymentStatus   String?
+  user            User     @relation(fields: [userId], references: [id])
 }
 
 model Logs {
