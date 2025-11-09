@@ -20,7 +20,7 @@ import { addLogHandler } from "@/helper/AddLog";
 import { useSelector } from "react-redux";
 import { InitialState } from "@/redux/types";
 import PageTitle from "@/components/page-title";
-import { Delete, Pencil, Trash } from "lucide-react";
+import { Delete, EyeOff, Pencil, Trash, ArrowLeft } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
 import Image from "next/image";
 import { Cloudinary } from "cloudinary-core";
@@ -35,6 +35,8 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { Switch } from "@/components/ui/switch";
+
 
 const UpdateProduct = () => {
   const navigate = useRouter();
@@ -45,6 +47,8 @@ const UpdateProduct = () => {
     price: 0,
     quantity: 0,
     id: "",
+    visible: false,
+    featured: false,
   });
   const param = useParams();
   const userData = useSelector((state: InitialState) => state.userData);
@@ -74,6 +78,8 @@ const UpdateProduct = () => {
     image: z.string().nonempty(),
     price: z.coerce.number(),
     quantity: z.coerce.number(),
+    visible: z.boolean(),
+    featured: z.boolean(),
     file: z.string().optional(),
   });
 
@@ -87,6 +93,8 @@ const UpdateProduct = () => {
     form.setValue("image", data.image);
     form.setValue("price", data.price);
     form.setValue("quantity", data.quantity);
+    form.setValue("visible", data.visible);
+    form.setValue("featured", data.featured);
   }, [data, form]);
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
@@ -141,17 +149,20 @@ const UpdateProduct = () => {
     }
   };
 
-  const deleteProductHandler = async () => {
-    toast.loading("Deleting Product");
+  const MarkProductNotVisible = async () => {
+    toast.loading("Updating Product Status");
     try {
-      await axios.delete(`/api/product/deleteproduct/${data.id}`);
+      await axios.put(`/api/product/updateproduct/${data.id}`, {
+        visible: false,
+        featured: false,
+      });
       await addLogHandler({
         type: "Product",
-        message: `Product Deleted: ${data.product_name}`,
+        message: `Product Hidden: ${data.product_name}`,
         userId: userData?.userId,
       });
       toast.dismiss();
-      toast.success("Product Deleted");
+      toast.success("Product Hidden");
       navigate.push("/products");
     } catch (error: any) {
       toast.dismiss();
@@ -164,6 +175,16 @@ const UpdateProduct = () => {
       <PageTitle
         title={"Edit Product"}
         icon={<Pencil className="mr-3" size={20} />}
+        action={
+          <Button
+            variant="outline"
+            onClick={() => navigate.push("/products")}
+            className="flex items-center gap-2"
+          >
+            <ArrowLeft size={18} />
+            Back
+          </Button>
+        }
       />
       <Form {...form}>
         <form
@@ -187,16 +208,87 @@ const UpdateProduct = () => {
             control={form.control}
             name="product_description"
             render={({ field }) => (
-              <FormItem>
-                <FormLabel>Product Description</FormLabel>
-                <FormControl>
+                <FormItem>
+                  <FormLabel>Product Description</FormLabel>
+                  <FormControl>
                   <Textarea placeholder="" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )
+            }
           />
           <section className="grid grid-cols-2 gap-x-4">
+            <div>
+              <div>
+                <FormField
+                  control={form.control}
+                  name="price"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Product Price</FormLabel>
+                      <FormControl>
+                        <Input placeholder="" type="number" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+              <div>
+                <FormField
+                  control={form.control}
+                  name="quantity"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Product Quantity</FormLabel>
+                      <FormControl>
+                        <Input placeholder="" type="number" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+              <div className="flex mt-6 space-x-10">
+                <div>
+                  <FormField
+                    control={form.control}
+                    name="visible"
+                    render={({ field }) => (
+                      <FormItem className="flex justify-center items-center space-x-2">
+                        <FormLabel>Product Visibility</FormLabel>
+                        <FormControl>
+                          <Switch
+                            checked={field.value}
+                            onCheckedChange={field.onChange}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+                <div>
+                  <FormField
+                    control={form.control}
+                    name="featured"
+                    render={({ field }) => (
+                      <FormItem className="flex justify-center items-center space-x-2">
+                        <FormLabel>is Product Featured</FormLabel>
+                        <FormControl>
+                          <Switch
+                            checked={field.value}
+                            onCheckedChange={field.onChange}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+              </div>
+            </div>
             <div>
               <FormField
                 control={form.control}
@@ -216,43 +308,18 @@ const UpdateProduct = () => {
                   </FormItem>
                 )}
               />
-              <FormField
-                control={form.control}
-                name="price"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Product Price</FormLabel>
-                    <FormControl>
-                      <Input placeholder="" type="number" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
+              <div className="mt-3">
+                <FormLabel>Product Image Preview</FormLabel>
+                {data && data.image && (
+                  <Image
+                    src={data.image}
+                    width={200}
+                    height={300}
+                    alt="product preview"
+                    className="mt-2"
+                  />
                 )}
-              />
-              <FormField
-                control={form.control}
-                name="quantity"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Product Quantity</FormLabel>
-                    <FormControl>
-                      <Input placeholder="" type="number" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-            <div>
-              <FormLabel>Product Image Preview</FormLabel>
-              {data && data.image && (
-                <Image
-                  src={data.image}
-                  width={200}
-                  height={300}
-                  alt="product preview"
-                />
-              )}
+              </div>
             </div>
           </section>
           <span className="mt-10 w-4"></span>
@@ -260,32 +327,30 @@ const UpdateProduct = () => {
             <Button type="submit">Update Product</Button>
           </div>
         </form>
-        <AlertDialog>
-          <AlertDialogTrigger>
-            <Button
-              className="ml-2 absolute top-10 right-10"
-              variant={"destructive"}
-              size={"icon"}
-            >
-              <Trash size={20} />
-            </Button>
-          </AlertDialogTrigger>
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-              <AlertDialogDescription>
-                This action cannot be undone. This will permanently delete your
-                account and remove your product from the database.
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-              <AlertDialogCancel>Cancel</AlertDialogCancel>
-              <AlertDialogAction onClick={deleteProductHandler}>
-                Delete
-              </AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
+        {data.visible ? (
+          <AlertDialog>
+            <AlertDialogTrigger>
+              <Button className="ml-2 absolute top-10 right-10">
+                <EyeOff size={18} className="mr-2" /> Hide Product
+              </Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                <AlertDialogDescription>
+                  On Submit, this product will be hidden from the website. You
+                  can unhide it anytime by setting “Visible” to true.{" "}
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <AlertDialogAction onClick={MarkProductNotVisible}>
+                  Submit
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+        ) : null}
       </Form>
     </section>
   );

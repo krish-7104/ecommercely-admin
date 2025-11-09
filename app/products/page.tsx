@@ -1,25 +1,13 @@
 "use client";
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "react-hot-toast";
 import PageTitle from "@/components/page-title";
-import { ShoppingBag, ArrowRight, Expand, Plus } from "lucide-react";
-import Image from "next/image";
-import { Switch } from "@/components/ui/switch";
-import { addLogHandler } from "@/helper/AddLog";
+import { ShoppingBag, Plus } from "lucide-react";
 import { useSelector } from "react-redux";
-import {
-  Drawer,
-  DrawerClose,
-  DrawerContent,
-  DrawerDescription,
-  DrawerFooter,
-  DrawerHeader,
-  DrawerTitle,
-  DrawerTrigger,
-} from "@/components/ui/drawer";
-import { Button } from "@/components/ui/button";
+import { DataTable } from "./data-table";
+import { createColumns } from "./columns";
 
 export type Products = {
   id: string;
@@ -37,11 +25,11 @@ export type Products = {
 };
 const Product = () => {
   const navigate = useRouter();
-  const [selected, setSelected] = useState();
   const [data, setData] = useState<Products[]>([]);
   const [dataFetched, setDataFetched] = useState(false);
   const userData = useSelector((state: any) => state?.userData);
-  const getData = async (): Promise<void> => {
+  
+  const getData = useCallback(async (): Promise<void> => {
     toast.loading("Loading Data");
     try {
       const resp = await axios.post("/api/product/getproducts");
@@ -54,38 +42,13 @@ const Product = () => {
       toast.dismiss();
       toast.error("Something Went Wrong!");
     }
-  };
+  }, []);
 
   useEffect(() => {
     if (!dataFetched) {
       getData();
     }
-  }, [dataFetched]);
-
-  const updateData = async (
-    id: string,
-    type: any,
-    value: Boolean,
-    name: string
-  ) => {
-    toast.loading("Uploading Data");
-    try {
-      const resp = await axios.put(`/api/product/updateproduct/${id}`, {
-        [type]: value,
-      });
-      await addLogHandler({
-        type: "Product",
-        message: `Product Updated: ${type} - ${value} (${name})`,
-        userId: userData?.userId,
-      });
-      console.log(`Product Updated: ${type} - ${value} (${name})`);
-      getData();
-      toast.dismiss();
-    } catch (error: any) {
-      toast.dismiss();
-      toast.error("Something Went Wrong!");
-    }
-  };
+  }, [dataFetched, getData]);
 
   const [access, setAccess] = useState(false);
   useEffect(() => {
@@ -96,6 +59,11 @@ const Product = () => {
       setAccess(true);
     }
   }, [userData]);
+
+  const columns = useMemo(
+    () => createColumns(navigate.push),
+    [navigate.push]
+  );
 
   return (
     <section className="w-full min-h-[100vh] bg-white">
@@ -119,76 +87,9 @@ const Product = () => {
           icon={<ShoppingBag className="mr-2" size={20} />}
         />
       )}
-      <section className="w-[92%] mx-auto my-6">
-        <ul className="bg-[#f6f6f6] rounded-lg p-3 grid grid-cols-7 mb-3 border border-black sticky top-20 z-20">
-          <li className="font-medium text-center">Image</li>
-          <li className="font-medium text-center">Price</li>
-          <li className="font-medium text-center">Stock</li>
-          <li className="font-medium text-center">Category</li>
-          <li className="font-medium text-center">Published</li>
-          <li className="font-medium text-center">Featured</li>
-          <li className="font-medium text-center"></li>
-        </ul>
-        {data &&
-          data.map((item) => (
-            <div
-              key={item.id}
-              className="bg-[#fff] p-2 grid grid-cols-7 border-b place-items-center cursor-pointer group"
-            >
-              {item.image && (
-                <Image
-                  src={item.image}
-                  alt="product image"
-                  width={100}
-                  height={100}
-                  className="rounded-xl mx-auto object-contain"
-                />
-              )}
-              <p className="font-medium text-center text-black/80 text-sm">
-                ₹{item.price}
-              </p>
-              <p className="font-medium text-center text-black/80 text-sm">
-                {item.quantity}
-              </p>
-              <p className="font-medium text-center text-black/80 text-sm">
-                {item.Category.name}
-              </p>
-              <p
-                className="font-medium text-center text-black/80 text-sm"
-                onClick={() =>
-                  updateData(
-                    item.id,
-                    "visible",
-                    !item.visible,
-                    item.product_name
-                  )
-                }
-              >
-                <Switch id="airplane-mode" checked={item.visible} />
-              </p>
-              <p className="font-medium text-center text-black/80 text-sm">
-                <Switch
-                  id="airplane-mode"
-                  checked={item.featured}
-                  onClick={() =>
-                    updateData(
-                      item.id,
-                      "featured",
-                      !item.featured,
-                      item.product_name
-                    )
-                  }
-                />
-              </p>
-              <Expand
-                size={20}
-                onClick={() =>
-                  navigate.push(`/products/updateproduct/${item.id}`)
-                }
-              />
-            </div>
-          ))}
-      </section>
+      <div className="container mx-auto py-10">
+        <DataTable columns={columns} data={data} />
+      </div>
     </section>
   );
 };

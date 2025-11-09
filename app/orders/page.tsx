@@ -1,12 +1,12 @@
 "use client";
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { DataTable } from "./data-table";
 import { useRouter } from "next/navigation";
 import { toast } from "react-hot-toast";
 import { Truck } from "lucide-react";
 import PageTitle from "@/components/page-title";
-import { columns } from "./columns";
+import { createColumns } from "./columns";
 
 export type FormateProduct = {
   id: string;
@@ -17,7 +17,7 @@ export type FormateProduct = {
     category: string;
     quantity: number;
     productid: string;
-  };
+  }[];
   total: number;
   status: string;
   createdAt: string;
@@ -53,10 +53,15 @@ const Product = () => {
     }
   }, [dataFetched]);
 
+  const columns = useMemo(
+    () => createColumns(navigate.push),
+    [navigate.push]
+  );
+
   return (
-    <section className="w-full mx-auto h-[100vh] bg-[#fff]">
+    <section className="w-full mx-auto min-h-[100vh] bg-[#fff]">
       <PageTitle title={"Orders"} icon={<Truck className="mr-2" />} />
-      <div className="overflow-x-hidden w-[96%] mx-auto my-4 container">
+      <div className="container mx-auto py-10">
         {data.length !== 0 && data && (
           <DataTable columns={columns} data={data} />
         )}

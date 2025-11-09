@@ -2,20 +2,30 @@
 
 import { Button } from "@/components/ui/button";
 import { ColumnDef } from "@tanstack/react-table";
-import { ArrowUpDown, MoreHorizontal } from "lucide-react";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { toast } from "react-hot-toast";
+import { ArrowUpDown, Eye } from "lucide-react";
 import { FormateProduct } from "./page";
 import dateFormaterHandler from "@/helper/DataFormatter";
 
-export const columns: ColumnDef<FormateProduct>[] = [
+export const createColumns = (
+  navigate: (path: string) => void
+): ColumnDef<FormateProduct>[] => [
+  {
+    accessorKey: "user.name",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Customer Name
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
+    cell: ({ row }) => {
+      return <p className="font-medium">{row.original.user.name}</p>;
+    },
+  },
   {
     accessorKey: "user.email",
     header: ({ column }) => {
@@ -24,11 +34,28 @@ export const columns: ColumnDef<FormateProduct>[] = [
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          User Email
+          Email
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       );
     },
+  },
+  {
+    accessorKey: "createdAt",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Order Date
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
+    cell: ({ row }) => (
+      <p className="text-sm">{dateFormaterHandler(row.original.createdAt)}</p>
+    ),
   },
   {
     accessorKey: "products.length",
@@ -38,10 +65,16 @@ export const columns: ColumnDef<FormateProduct>[] = [
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Products
+          Items
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       );
+    },
+    cell: ({ row }) => {
+      const productCount = Array.isArray(row.original.products)
+        ? row.original.products.length
+        : 0;
+      return <p className="text-center">{productCount}</p>;
     },
   },
   {
@@ -52,9 +85,14 @@ export const columns: ColumnDef<FormateProduct>[] = [
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Total
+          Total Amount
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
+      );
+    },
+    cell: ({ row }) => {
+      return (
+        <p className="font-semibold text-green-700">₹{row.original.total}</p>
       );
     },
   },
@@ -71,59 +109,41 @@ export const columns: ColumnDef<FormateProduct>[] = [
         </Button>
       );
     },
-  },
-  {
-    accessorKey: "createdAt",
-    header: ({ column }) => {
+    cell: ({ row }) => {
+      const status = row.original.status;
+      const statusColors: Record<string, string> = {
+        Pending: "bg-yellow-100 text-yellow-800 border-yellow-300",
+        Shipping: "bg-blue-100 text-blue-800 border-blue-300",
+        Delivered: "bg-green-100 text-green-800 border-green-300",
+        Cancelled: "bg-red-100 text-red-800 border-red-300",
+      };
+      const colorClass =
+        statusColors[status] ||
+        "bg-gray-100 text-gray-800 border-gray-300";
+
       return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        <span
+          className={`inline-block text-center px-3 py-1 rounded-full text-xs font-medium border ${colorClass}`}
         >
-          Placed On
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
+          {status}
+        </span>
       );
     },
-    cell: ({ row }) => <p>{dateFormaterHandler(row.original.createdAt)}</p>,
   },
   {
     id: "actions",
+    header: "Actions",
     cell: ({ row }) => {
       return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <MoreHorizontal className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem
-              onClick={() => window.open(`orders/${row.original.id}`, "_self")}
-            >
-              View Order
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem
-              onClick={() => {
-                navigator.clipboard.writeText(row.original.userId);
-                toast.success("User Id Copied");
-              }}
-            >
-              Copy User ID
-            </DropdownMenuItem>
-            <DropdownMenuItem
-              onClick={() => {
-                navigator.clipboard.writeText(row.original.user.email);
-                toast.success("User Email Copied");
-              }}
-            >
-              Copy User Email
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => navigate(`/orders/${row.original.id}`)}
+          className="flex items-center gap-2"
+        >
+          <Eye className="h-4 w-4" />
+          View
+        </Button>
       );
     },
   },

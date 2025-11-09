@@ -58,13 +58,13 @@ export function DataTable<TData, TValue>({
   });
 
   return (
-    <div className="rounded-md px-2 w-full">
+    <div className="rounded-md px-2">
       <div className="flex items-center py-4">
         <Input
-          placeholder="Search by customer name or email..."
-          value={(table.getColumn("user.name")?.getFilterValue() as string) ?? ""}
+          placeholder="Search products..."
+          value={(table.getColumn("product_name")?.getFilterValue() as string) ?? ""}
           onChange={(event) =>
-            table.getColumn("user.name")?.setFilterValue(event.target.value)
+            table.getColumn("product_name")?.setFilterValue(event.target.value)
           }
           className="max-w-sm"
         />
@@ -95,8 +95,7 @@ export function DataTable<TData, TValue>({
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
-      <div className="w-full">
-        <Table>
+      <Table>
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
             <TableRow key={headerGroup.id}>
@@ -123,7 +122,7 @@ export function DataTable<TData, TValue>({
                 data-state={row.getIsSelected() && "selected"}
               >
                 {row.getVisibleCells().map((cell) => (
-                  <TableCell key={cell.id} className="font-medium">
+                  <TableCell key={cell.id}>
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </TableCell>
                 ))}
@@ -138,7 +137,6 @@ export function DataTable<TData, TValue>({
           )}
         </TableBody>
       </Table>
-      </div>
       <div className="flex items-center justify-end space-x-2 py-4">
         <Button
           variant="outline"
@@ -160,3 +158,4 @@ export function DataTable<TData, TValue>({
     </div>
   );
 }
+
