@@ -50,11 +50,14 @@ const AddAdmin = () => {
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     toast.loading("Adding Admin..");
     try {
-      await axios.post("/api/auth/register", values);
+      const response = await axios.post("/api/auth/register", values);
+      const afterData = response.data;
       await addLogHandler({
         type: "Admin",
         message: `Admin Added: ${values.name} (${values.email})`,
         userId: userData.userId,
+        before: null,
+        after: afterData,
       });
       toast.dismiss();
       toast.success("Admin Added Successfull");

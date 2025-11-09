@@ -74,8 +74,9 @@ const Home = () => {
   });
   const [orderPieChart, setOrderPieChart] =
     useState<{ name: string; value: number; color: string }[]>();
-  const [categoryPieChart, setCategoryPieChart] =
-    useState<{ name: string; value: number; color: string }[]>();
+  const [lowStockProducts, setLowStockProducts] = useState<
+    { id: string; name: string; quantity: number; price: number }[]
+  >([]);
 
   const [analysisData, setAnalysisData] = useState<
     { name: string; Orders: any; Profit: any }[]
@@ -201,27 +202,17 @@ const Home = () => {
       };
     });
     setOrderPieChart(orderDataForChart);
-    const categoryColors = [
-      "#82ca9d",
-      "rgba(255, 99, 132)",
-      "#ffc658",
-      "rgba(54, 162, 235)",
-      "#8884d8",
-    ];
-    const categoryLabels = mainData.category.map((category) => category.name);
-    const categoryData = mainData.category.map(
-      (category) =>
-        mainData.products.filter((product) => product.category === category.id)
-          .length
-    );
-    let categoryDataForChart = categoryLabels.map((item, index) => {
-      return {
-        name: item,
-        value: categoryData[index],
-        color: categoryColors[index],
-      };
-    });
-    setCategoryPieChart(categoryDataForChart);
+    
+    const lowStock = mainData.products
+      .filter((product) => product.quantity <= 10)
+      .map((product) => ({
+        id: product.id,
+        name: product.product_name,
+        quantity: product.quantity,
+        price: product.price,
+      }))
+      .sort((a, b) => a.quantity - b.quantity);
+    setLowStockProducts(lowStock);
   }, [mainData]);
 
   useEffect(() => {
@@ -317,10 +308,18 @@ const Home = () => {
                   <stop offset="95%" stopColor="#82ca9d" stopOpacity={0} />
                 </linearGradient>
               </defs>
-              <XAxis dataKey="name" fontSize={13} />
-              <YAxis fontSize={13} />
+              <XAxis 
+                dataKey="name" 
+                fontSize={13}
+                tick={{ fill: '#666' }}
+              />
+              <YAxis 
+                fontSize={13}
+                tick={{ fill: '#666' }}
+              />
               <CartesianGrid strokeDasharray="3 3" />
               <Tooltip />
+              <Legend />
               <Area
                 type="monotone"
                 dataKey="Profit"
@@ -344,23 +343,31 @@ const Home = () => {
                 <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
                   <stop
                     offset="5%"
-                    color="#8884d8"
                     stopColor="#8884d8"
                     stopOpacity={0.8}
                   />
                   <stop offset="95%" stopColor="#8884d8" stopOpacity={0} />
                 </linearGradient>
               </defs>
-              <XAxis dataKey="name" fontSize={13} />
-              <YAxis fontSize={13} />
+              <XAxis 
+                dataKey="name" 
+                fontSize={13}
+                tick={{ fill: '#666' }}
+              />
+              <YAxis 
+                fontSize={13}
+                tick={{ fill: '#666' }}
+              />
               <CartesianGrid strokeDasharray="3 3" />
               <Tooltip />
+              <Legend />
               <Area
                 type="monotone"
                 dataKey="Orders"
                 stroke="#8884d8"
                 fillOpacity={1}
                 fill="url(#colorUv)"
+                name="Orders"
               />
             </AreaChart>
           </div>
@@ -390,25 +397,39 @@ const Home = () => {
             </div>
             <div className="w-1/2">
               <p className="mt-6 mb-2 text-lg font-medium text-gray-700">
-                Category Wise Products
+                Low Stock Products
               </p>
               <div className="w-full flex flex-col justify-center items-center mb-6 bg-white p-4 rounded-xl shadow">
-                <PieChart width={800} height={300}>
-                  <Pie
-                    data={categoryPieChart}
-                    dataKey="value"
-                    nameKey="name"
-                    cx="50%"
-                    cy="50%"
-                    outerRadius={110}
-                  >
-                    {categoryPieChart?.map((data, index) => (
-                      <Cell key={`cell-${index}`} fill={data.color}></Cell>
-                    ))}
-                  </Pie>
-                  <Tooltip />
-                  {/* <Legend /> */}
-                </PieChart>
+                {lowStockProducts.length > 0 ? (
+                  <div className="w-full overflow-x-auto">
+                    <table className="w-full border-collapse">
+                      <thead>
+                        <tr className="border-b">
+                          <th className="text-left p-3 text-sm font-semibold text-gray-700">Product Name</th>
+                          <th className="text-right p-3 text-sm font-semibold text-gray-700">Stock</th>
+                          <th className="text-right p-3 text-sm font-semibold text-gray-700">Price</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {lowStockProducts.map((product) => (
+                          <tr key={product.id} className="border-b hover:bg-gray-50">
+                            <td className="p-3 text-sm text-gray-800">{product.name}</td>
+                            <td className="p-3 text-sm text-right">
+                              <span className={`font-semibold ${product.quantity <= 5 ? 'text-red-600' : 'text-orange-600'}`}>
+                                {product.quantity}
+                              </span>
+                            </td>
+                            <td className="p-3 text-sm text-right text-gray-600">₹{product.price}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                ) : (
+                  <div className="w-full flex justify-center items-center h-64">
+                    <p className="text-gray-500">No products with low stock</p>
+                  </div>
+                )}
               </div>
             </div>
           </section>

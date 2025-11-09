@@ -5,6 +5,8 @@ type LogType = {
   type: string;
   message: string;
   userId: string;
+  before?: any;
+  after?: any;
 };
 
 export const addLogHandler = async (values: LogType) => {

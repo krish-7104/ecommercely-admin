@@ -43,10 +43,13 @@ const AddCategory = () => {
     toast.loading("Adding Category..");
     try {
       const resp = await axios.post("/api/category/addcategory", values);
+      const afterData = resp.data;
       const logResp = await addLogHandler({
         type: "Category",
         message: `Category Added: ${values.name}`,
         userId: userData.userId,
+        before: null,
+        after: afterData,
       });
       toast.dismiss();
       toast.success("Category Added");

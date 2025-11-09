@@ -74,11 +74,14 @@ const AddProduct = () => {
       );
       values.category = selectedCategory ? selectedCategory.id : "";
 
-      await axios.post("/api/product/addproduct", values);
+      const response = await axios.post("/api/product/addproduct", values);
+      const afterData = response.data;
       await addLogHandler({
         type: "Product",
         message: `Product Added: ${values.product_name}`,
         userId: userData.userId,
+        before: null,
+        after: afterData,
       });
       toast.dismiss();
       toast.success("Product Added");

@@ -8,17 +8,33 @@ export async function PUT(
 ) {
   
   try {
-    const body = await req.json() as Prisma.OrderUpdateInput;
-    const order = await prismadb.order.update({
+    const beforeData = await prismadb.order.findUnique({
       where: { id: context.params.orderid },
-      data: { ...body },
+      include: {
+        user: true,
+      },
     });
-    if (order) {
-      return new NextResponse("Order Updated", { status: 200 });
-    } else {
+
+    if (!beforeData) {
       return new NextResponse("Order not found", { status: 404 });
     }
+
+    const body = await req.json() as Prisma.OrderUpdateInput;
+    const afterData = await prismadb.order.update({
+      where: { id: context.params.orderid },
+      data: { ...body },
+      include: {
+        user: true,
+      },
+    });
+
+    return NextResponse.json({
+      message: "Order Updated",
+      before: beforeData,
+      after: afterData,
+    });
   } catch (error) {
+    console.log(error);
     return new NextResponse("Internal Error", { status: 500 });
   }
 }

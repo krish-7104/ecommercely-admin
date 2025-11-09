@@ -100,11 +100,14 @@ const UpdateProduct = () => {
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     toast.loading("Updating Product");
     try {
-      await axios.put(`/api/product/updateproduct/${data.id}`, values);
+      const response = await axios.put(`/api/product/updateproduct/${data.id}`, values);
+      const { before, after } = response.data;
       await addLogHandler({
         type: "Product",
         message: `Product Updated: ${values.product_name}`,
         userId: userData?.userId,
+        before: before,
+        after: after,
       });
       toast.dismiss();
       toast.success("Product Updated");
@@ -152,14 +155,17 @@ const UpdateProduct = () => {
   const MarkProductNotVisible = async () => {
     toast.loading("Updating Product Status");
     try {
-      await axios.put(`/api/product/updateproduct/${data.id}`, {
+      const response = await axios.put(`/api/product/updateproduct/${data.id}`, {
         visible: false,
         featured: false,
       });
+      const { before, after } = response.data;
       await addLogHandler({
         type: "Product",
         message: `Product Hidden: ${data.product_name}`,
         userId: userData?.userId,
+        before: before,
+        after: after,
       });
       toast.dismiss();
       toast.success("Product Hidden");

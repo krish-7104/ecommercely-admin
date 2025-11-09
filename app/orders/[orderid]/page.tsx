@@ -92,13 +92,16 @@ const Order = () => {
     setData({ ...data, status: value });
     toast.loading("Updating Status");
     try {
-      await axios.put(`/api/order/updateorder/${param.orderid}`, {
+      const response = await axios.put(`/api/order/updateorder/${param.orderid}`, {
         status: value,
       });
+      const { before, after } = response.data;
       await addLogHandler({
         type: "Order",
         message: `Order Updated: Status - ${previousStatus} → ${value} (${data.id})`,
         userId: userData.userId,
+        before: before,
+        after: after,
       });
       toast.dismiss();
       toast.success("Status Updated Successfully");

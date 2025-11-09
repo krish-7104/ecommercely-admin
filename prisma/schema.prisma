@@ -84,6 +84,8 @@ model Logs {
   id        String   @id @default(uuid())
   type      String
   message   String
+  before    Json?
+  after     Json?
   createdAt DateTime  @default(now())
   userId    String
   AdminUser AdminUser @relation(fields: [userId], references: [id])

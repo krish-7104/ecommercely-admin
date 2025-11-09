@@ -10,6 +10,8 @@ type Log = {
   message: string;
   id: string;
   createdAt: string;
+  before?: any;
+  after?: any;
 };
 
 const Logs = () => {
@@ -41,6 +43,26 @@ const Logs = () => {
               <p className="text-xs mt-1">
                 {dateFormaterHandler(item.createdAt)}
               </p>
+              {(item.before || item.after) && (
+                <div className="mt-4 grid grid-cols-2 gap-4">
+                  {item.before && (
+                    <div className="bg-red-50 border border-red-200 rounded p-3">
+                      <p className="text-xs font-semibold text-red-700 mb-2">Before:</p>
+                      <pre className="text-xs overflow-auto max-h-40">
+                        {JSON.stringify(item.before, null, 2)}
+                      </pre>
+                    </div>
+                  )}
+                  {item.after && (
+                    <div className="bg-green-50 border border-green-200 rounded p-3">
+                      <p className="text-xs font-semibold text-green-700 mb-2">After:</p>
+                      <pre className="text-xs overflow-auto max-h-40">
+                        {JSON.stringify(item.after, null, 2)}
+                      </pre>
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
           ))}
         </div>
