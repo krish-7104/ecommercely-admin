@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@hookform/resolvers": "^3.2.0",
-    "@prisma/client": "^5.2.0",
+    "@prisma/client": "^6.19.0",
     "@radix-ui/react-alert-dialog": "^1.0.4",
     "@radix-ui/react-avatar": "^1.0.3",
     "@radix-ui/react-dialog": "^1.0.5",
@@ -20,7 +20,7 @@
     "@radix-ui/react-popover": "^1.0.6",
     "@radix-ui/react-select": "^1.2.2",
     "@radix-ui/react-separator": "^1.0.3",
-    "@radix-ui/react-slot": "^1.0.2",
+    "@radix-ui/react-slot": "^1.2.4",
     "@radix-ui/react-switch": "^1.0.3",
     "@radix-ui/react-toast": "^1.1.4",
     "@tanstack/react-table": "^8.9.3",
@@ -60,11 +60,12 @@
     "zod": "^3.22.1"
   },
   "devDependencies": {
+    "@types/bcryptjs": "^2.4.6",
     "@types/js-cookie": "^3.0.3",
     "@types/jsonwebtoken": "^9.0.2",
     "@types/node": "^20.5.0",
     "@types/nodemailer": "^6.4.9",
-    "prisma": "^5.2.0",
+    "prisma": "^6.19.0",
     "ts-node": "^10.9.1",
     "typescript": "^5.1.6"
   }

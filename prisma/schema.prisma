@@ -12,6 +12,7 @@ model AdminUser {
   name      String   @unique
   email     String   @unique
   password  String
+  active    Boolean @default(true)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   Logs      Logs[]

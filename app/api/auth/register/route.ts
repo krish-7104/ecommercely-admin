@@ -11,7 +11,7 @@ interface RegisterBody {
 
 export async function POST(req: Request) {
   try {
-    const body = await req.json() as RegisterBody;
+    const body = (await req.json()) as RegisterBody;
     const { email, password, name } = body;
 
     const hashedPassword = await bcrypt.hash(password, 10);

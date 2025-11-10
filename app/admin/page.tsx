@@ -10,10 +10,11 @@ import PageTitle from "@/components/page-title";
 import { UserCog, UserPlus2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 
-type AdminType = {
+export type AdminType = {
   id: string;
   name: string;
   email: string;
+  active: boolean;
   createdAt: string;
   updatedAt: string;
 };
@@ -38,7 +39,7 @@ const Admin = () => {
     if (access) {
       toast.loading("Loading Data");
       try {
-        const resp = await axios.post("/api/auth/getadmins");
+        const resp = await axios.get("/api/auth/admin");
         setData(resp.data);
         toast.dismiss();
       } catch (error: any) {
@@ -68,7 +69,7 @@ const Admin = () => {
         {access && (
           <button
             className="bg-red-500 hover:bg-red-600 text-white p-4 flex justify-center items-center rounded-2xl absolute bottom-8 right-8"
-            onClick={() => router.push("/admin/addadmin")}
+            onClick={() => router.push("/admin/modify-admin")}
           >
             <UserPlus2 />
           </button>

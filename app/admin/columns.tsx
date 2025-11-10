@@ -13,14 +13,10 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { toast } from "react-hot-toast";
 import dateFormaterHandler from "@/helper/DataFormatter";
-
-type AdminType = {
-  id: string;
-  name: string;
-  email: string;
-  createdAt: string;
-  updatedAt: string;
-};
+import { AdminType } from "./page";
+import { Badge } from "@/components/ui/badge";
+import { useRouter } from "next/navigation";
+import axios from "axios";
 
 export const columns: ColumnDef<AdminType>[] = [
   {
@@ -48,6 +44,27 @@ export const columns: ColumnDef<AdminType>[] = [
           Email
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
+      );
+    },
+  },
+  {
+    accessorKey: "active",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Active
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
+    cell: ({ row }) => {
+      return (
+        <Badge variant={row.original.active ? "default" : "destructive"}>
+          {row.original.active ? "True" : "False"}
+        </Badge>
       );
     },
   },
@@ -90,6 +107,29 @@ export const columns: ColumnDef<AdminType>[] = [
     id: "actions",
     cell: ({ row }) => {
       const adminUserId = row.original.id;
+      const router = useRouter();
+
+      const deleteAdminHandler = async (id: string) => {
+        const confirm = window.confirm(
+          "Are you sure you want to delete this admin user?"
+        );
+        if (confirm) {
+          try {
+            const response = await axios.delete(`/api/auth/admin/${id}`);
+
+            if (response.status === 200) {
+              toast.success("Admin user deleted successfully");
+              router.replace("/admin");
+            } else {
+              toast.error("Failed to delete admin user");
+            }
+          } catch (error) {
+            console.log(error);
+            toast.error("An error occurred while deleting admin user");
+          }
+        }
+      };
+
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -102,14 +142,19 @@ export const columns: ColumnDef<AdminType>[] = [
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuItem
               onClick={() => {
-                navigator.clipboard.writeText(adminUserId);
-                toast.success("Admin User Id Copied");
+                router.push(`/admin/modify-admin?id=${adminUserId}`);
               }}
             >
-              Copy Admin ID
+              Edit
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            {/* <DropdownMenuItem>Delete Admin</DropdownMenuItem> */}
+            <DropdownMenuItem
+              onClick={() => {
+                deleteAdminHandler(adminUserId);
+              }}
+            >
+              Delete
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       );
